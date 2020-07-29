@@ -7,6 +7,7 @@ module.exports = {
     ".+\\.ts$": "ts-jest",
   },
   testEnvironment: "node",
+  setupFilesAfterEnv: ["<rootDir>/src/main/config/jest-setup.ts"],
   globals: {
     "ts-jest": {
       diagnostics: false,

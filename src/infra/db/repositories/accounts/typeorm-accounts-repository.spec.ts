@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import { getRepository, Repository } from "typeorm";
 import { TypeOrmAccountsRepository } from "./typeorm-accounts-repository";
 import { AccountModel } from "../../models/account";
