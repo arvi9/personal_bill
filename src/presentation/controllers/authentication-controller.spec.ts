@@ -7,10 +7,8 @@ import {
   success,
   HttpRequest,
 } from "../protocols/http";
-import { Authenticate } from "@/domain/usecases";
-import { mockAccountWithToken } from "@/domain/tests/mock-account";
 import { UnauthorizedError, ServerError } from "@/domain/errors";
-import { ValidationSpy } from "../test";
+import { ValidationSpy, AuthenticateSpy } from "../test";
 
 type SutTypes = {
   sut: AuthenticationController;
@@ -24,15 +22,6 @@ const makeSut = (): SutTypes => {
   const sut = new AuthenticationController(authenticateSpy, validationSpy);
   return { sut, authenticateSpy, validationSpy };
 };
-
-class AuthenticateSpy implements Authenticate {
-  params: any;
-  account = mockAccountWithToken();
-  async auth(params: Authenticate.Params): Promise<Authenticate.Model> {
-    this.params = params;
-    return this.account;
-  }
-}
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
