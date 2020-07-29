@@ -1,6 +1,11 @@
 import faker from "faker";
 import { AuthenticationController } from "./authentication-controller";
-import { badRequest, unauthorized, serverError } from "../protocols/http";
+import {
+  badRequest,
+  unauthorized,
+  serverError,
+  success,
+} from "../protocols/http";
 import { Authenticate } from "@/domain/usecases";
 import { mockAccountWithToken } from "@/domain/tests/mock-account";
 import { UnauthorizedError, ServerError } from "@/domain/errors";
@@ -84,5 +89,15 @@ describe("AuthenticationController", () => {
       },
     });
     expect(response).toEqual(serverError(new ServerError()));
+  });
+  it("should returns ok with access token and account on success", async () => {
+    const { sut, authenticateSpy } = makeSut();
+    const response = await sut.handle({
+      body: {
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      },
+    });
+    expect(response).toEqual(success(authenticateSpy.account));
   });
 });
