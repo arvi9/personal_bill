@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npx jest --runInBand --passWithNoTests",
     "test:watch": "yarn test --watchAll --silent",
-    "knex": "npx ts-node-dev ./node_modules/knex/bin/cli.js"
+    "typeorm": "npx ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
@@ -21,10 +21,13 @@
     "sqlite3": "^5.0.0",
     "ts-jest": "^26.1.4",
     "ts-node-dev": "^1.0.0-pre.56",
+    "tsconfig-paths": "^3.9.0",
     "typescript": "^3.9.7"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.25"
   }
 }
