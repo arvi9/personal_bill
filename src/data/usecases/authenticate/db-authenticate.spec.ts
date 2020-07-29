@@ -61,7 +61,9 @@ describe("DbAuthenticate", () => {
   });
   it("should throws IncorrectPasswordError with ComparationEncrypter returns false", () => {
     const { sut, comparationEncrypterSpy } = makeSut();
-    jest.spyOn(comparationEncrypterSpy, "compare").mockReturnValueOnce(false);
+    jest
+      .spyOn(comparationEncrypterSpy, "compare")
+      .mockImplementationOnce(() => Promise.resolve(false));
     const result = sut.auth(makeAuthenticateParams());
     expect(result).rejects.toThrow(new IncorrectPasswordError());
   });
