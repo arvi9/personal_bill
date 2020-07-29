@@ -3,8 +3,9 @@ import { GenerateAccessToken } from "@/data/protocols";
 
 export class GenerateAccessTokenSpy implements GenerateAccessToken {
   params: any;
+  accessToken = faker.random.uuid();
   generate(params: GenerateAccessToken.Params): string {
     this.params = params;
-    return faker.random.uuid();
+    return this.accessToken;
   }
 }

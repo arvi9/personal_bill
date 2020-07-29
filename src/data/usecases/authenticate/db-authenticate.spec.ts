@@ -73,4 +73,15 @@ describe("DbAuthenticate", () => {
       email: accountsRepositorySpy.account.email,
     });
   });
+  it("should returns the account on success", async () => {
+    const { sut, accountsRepositorySpy, generateAccessTokenSpy } = makeSut();
+    const result = await sut.auth(makeAuthenticateParams());
+    expect(result).toEqual({
+      accessToken: generateAccessTokenSpy.accessToken,
+      account: {
+        id: accountsRepositorySpy.account.id,
+        name: accountsRepositorySpy.account.name,
+      },
+    });
+  });
 });
