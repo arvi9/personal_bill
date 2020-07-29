@@ -1,11 +1,16 @@
 import { Authenticate } from "@/domain/usecases";
-import { AccountsRepository, ComparationEncrypter } from "@/data/protocols";
+import {
+  AccountsRepository,
+  ComparationEncrypter,
+  GenerateAccessToken,
+} from "@/data/protocols";
 import { AccountNotFoundError, IncorrectPasswordError } from "@/domain/errors";
 
 export class DbAuthenticate {
   constructor(
     private readonly accountsRepository: AccountsRepository,
-    private readonly comparationEncrypter: ComparationEncrypter
+    private readonly comparationEncrypter: ComparationEncrypter,
+    private readonly generateAccessToken: GenerateAccessToken
   ) {}
 
   async auth(params: Authenticate.Params): Promise<Authenticate.Model> {
@@ -23,6 +28,11 @@ export class DbAuthenticate {
     if (!isEqual) {
       throw new IncorrectPasswordError();
     }
+
+    this.generateAccessToken.generate({
+      id: account.id,
+      email: account.email,
+    });
 
     return null;
   }
