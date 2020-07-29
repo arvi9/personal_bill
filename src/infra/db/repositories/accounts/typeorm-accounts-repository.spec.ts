@@ -46,5 +46,13 @@ describe("TypeOrmAccountsRepository", () => {
       const response = await sut.findByEmail(faker.internet.email());
       expect(response).toBeFalsy();
     });
+    it("should throws if typeorm throws", () => {
+      const { sut, helperRepository } = makeSut();
+      jest.spyOn(helperRepository, "findOne").mockImplementationOnce(() => {
+        throw new Error();
+      });
+      const result = sut.findByEmail(faker.internet.email());
+      expect(result).rejects.toThrow(new Error());
+    });
   });
 });
