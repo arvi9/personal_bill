@@ -1,9 +1,11 @@
 import { HttpResponse } from "./http-response";
 import { HttpStatusCode } from "./http-status-code";
 
-export const badRequest = (body?: any): HttpResponse => ({
+export const badRequest = (error: Error): HttpResponse => ({
   statusCode: HttpStatusCode.badRequest,
-  body,
+  body: {
+    message: error.message,
+  },
 });
 
 export const unauthorized = (error: Error): HttpResponse => ({

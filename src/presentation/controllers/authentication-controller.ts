@@ -18,17 +18,9 @@ export class AuthenticationController {
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      this.validation.validate(httpRequest.body);
-      if (!httpRequest.body.password) {
-        return badRequest({
-          message: "Password is required",
-        });
-      }
-
-      if (!httpRequest.body.email) {
-        return badRequest({
-          message: "Email is required",
-        });
+      const validationError = this.validation.validate(httpRequest.body);
+      if (validationError) {
+        return badRequest(validationError);
       }
 
       const { email, password } = httpRequest.body;
