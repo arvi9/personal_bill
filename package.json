@@ -7,6 +7,7 @@
     "test": "npx jest --runInBand --passWithNoTests",
     "test:watch": "yarn test --watchAll --silent",
     "test:coverage": "yarn test --coverage",
+    "dev:server": "npx ts-node-dev ./src/main/index.ts",
     "typeorm": "npx ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "devDependencies": {
