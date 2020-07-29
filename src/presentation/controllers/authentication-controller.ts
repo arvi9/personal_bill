@@ -9,6 +9,7 @@ import {
   success,
 } from "@/presentation/protocols/http";
 import { UnauthorizedError, ServerError } from "@/domain/errors";
+import { RequiredFieldError } from "../errors";
 
 export class AuthenticationController {
   constructor(
@@ -18,6 +19,10 @@ export class AuthenticationController {
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
+      if (!httpRequest.body) {
+        return badRequest(new RequiredFieldError("body"));
+      }
+
       const validationError = this.validation.validate(httpRequest.body);
       if (validationError) {
         return badRequest(validationError);
