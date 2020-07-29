@@ -1,13 +1,13 @@
 import { Authenticate } from "@/domain/usecases";
 import {
-  AccountsRepository,
+  FindAccountRepository,
   ComparationEncrypter,
   GenerateAccessToken,
 } from "@/data/protocols";
 
 export class DbAuthenticate implements Authenticate {
   constructor(
-    private readonly accountsRepository: AccountsRepository,
+    private readonly accountsRepository: FindAccountRepository,
     private readonly comparationEncrypter: ComparationEncrypter,
     private readonly generateAccessToken: GenerateAccessToken
   ) {}
