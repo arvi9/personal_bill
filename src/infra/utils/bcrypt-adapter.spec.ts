@@ -30,4 +30,15 @@ describe("BcryptAdapter", () => {
     const result = await sut.compare(params);
     expect(result).toBe(false);
   });
+  it("should returns true if comparation succeds", async () => {
+    const sut = makeSut();
+    mockedBcrypt.compare.mockResolvedValueOnce(true);
+    const value = faker.random.word();
+    const params = {
+      value,
+      valueToCompare: value,
+    };
+    const result = await sut.compare(params);
+    expect(result).toBe(true);
+  });
 });
