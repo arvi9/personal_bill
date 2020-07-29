@@ -13,4 +13,7 @@ module.exports = {
     },
   },
   testMatch: ["**/*.spec.ts"],
+  moduleNameMapper: {
+    "@/(.*)": "<rootDir>/src/$1",
+  },
 };
