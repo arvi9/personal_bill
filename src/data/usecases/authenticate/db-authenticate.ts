@@ -4,7 +4,6 @@ import {
   ComparationEncrypter,
   GenerateAccessToken,
 } from "@/data/protocols";
-import { IncorrectPasswordError } from "@/domain/errors";
 
 export class DbAuthenticate {
   constructor(
@@ -23,9 +22,7 @@ export class DbAuthenticate {
       valueToCompare: account.password,
     });
 
-    if (!isEqual) {
-      throw new IncorrectPasswordError();
-    }
+    if (!isEqual) return null;
 
     const accessToken = this.generateAccessToken.generate({
       id: account.id,

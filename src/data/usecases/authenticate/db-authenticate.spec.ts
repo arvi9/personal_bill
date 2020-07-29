@@ -6,7 +6,6 @@ import {
 } from "@/data/tests";
 import { DbAuthenticate } from "./db-authenticate";
 import { Authenticate } from "@/domain/usecases";
-import { AccountNotFoundError, IncorrectPasswordError } from "@/domain/errors";
 
 type SutTypes = {
   sut: DbAuthenticate;
@@ -59,13 +58,13 @@ describe("DbAuthenticate", () => {
       valueToCompare: accountsRepositorySpy.account.password,
     });
   });
-  it("should throws IncorrectPasswordError with ComparationEncrypter returns false", () => {
+  it("should return falsy if ComparationEncrypter returns false", async () => {
     const { sut, comparationEncrypterSpy } = makeSut();
     jest
       .spyOn(comparationEncrypterSpy, "compare")
       .mockImplementationOnce(() => Promise.resolve(false));
-    const result = sut.auth(makeAuthenticateParams());
-    expect(result).rejects.toThrow(new IncorrectPasswordError());
+    const result = await sut.auth(makeAuthenticateParams());
+    expect(result).toBeFalsy();
   });
   it("should calls GenerateAccessToken with correct params if password matches", async () => {
     const { sut, accountsRepositorySpy, generateAccessTokenSpy } = makeSut();
