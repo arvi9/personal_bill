@@ -29,11 +29,11 @@ export class DbAuthenticate {
       throw new IncorrectPasswordError();
     }
 
-    this.generateAccessToken.generate({
+    const accessToken = this.generateAccessToken.generate({
       id: account.id,
       email: account.email,
     });
 
-    return null;
+    return { accessToken, account: { id: account.id, name: account.name } };
   }
 }
