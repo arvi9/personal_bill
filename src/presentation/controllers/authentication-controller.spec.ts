@@ -9,6 +9,7 @@ import {
 } from "../protocols/http";
 import { UnauthorizedError, ServerError } from "@/domain/errors";
 import { ValidationSpy, AuthenticateSpy } from "../test";
+import { RequiredFieldError } from "../errors";
 
 type SutTypes = {
   sut: AuthenticationController;
@@ -31,6 +32,11 @@ const makeFakeRequest = (): HttpRequest => ({
 });
 
 describe("AuthenticationController", () => {
+  it("should returns bad request if body is undefined", async () => {
+    const { sut } = makeSut();
+    const response = await sut.handle({} as HttpRequest);
+    expect(response).toEqual(badRequest(new RequiredFieldError("body")));
+  });
   it("should calls validation with correct input", async () => {
     const { sut, validationSpy } = makeSut();
     const request = makeFakeRequest();
