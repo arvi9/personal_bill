@@ -1,4 +1,5 @@
 import { Authenticate } from "@/domain/usecases";
+import { Validation } from "@/presentation/protocols";
 import {
   HttpRequest,
   HttpResponse,
@@ -10,10 +11,14 @@ import {
 import { UnauthorizedError, ServerError } from "@/domain/errors";
 
 export class AuthenticationController {
-  constructor(private readonly authenticate: Authenticate) {}
+  constructor(
+    private readonly authenticate: Authenticate,
+    private readonly validation: Validation
+  ) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
+      this.validation.validate(httpRequest.body);
       if (!httpRequest.body.password) {
         return badRequest({
           message: "Password is required",
