@@ -1,10 +1,11 @@
+import { HttpRequest, HttpResponse, badRequest } from "../protocols/http";
+
 export class AuthenticationController {
-  async handle(httpRequest: any): Promise<any> {
+  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     if (!httpRequest.body.password) {
-      return {
-        statusCode: 400,
+      return badRequest({
         message: "Password is required",
-      };
+      });
     }
   }
 }
