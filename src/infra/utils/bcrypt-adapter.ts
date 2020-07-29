@@ -6,7 +6,6 @@ export class BcryptAdapter {
     value,
     valueToCompare,
   }: ComparationEncrypter.Params): Promise<boolean> {
-    await bcrypt.compare(value, valueToCompare);
-    return null;
+    return bcrypt.compare(value, valueToCompare);
   }
 }
