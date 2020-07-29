@@ -1,3 +1,4 @@
+import faker from "faker";
 import { getRepository, Repository } from "typeorm";
 import { TypeOrmAccountsRepository } from "./typeorm-accounts-repository";
 import { AccountModel } from "../../models/account";
@@ -33,6 +34,17 @@ describe("TypeOrmAccountsRepository", () => {
       await helperRepository.save(created);
       const response = await sut.findByEmail(account.email);
       expect(response).toEqual(account);
+    });
+    it("should returns falsy if the account is not found", async () => {
+      const { sut, helperRepository } = makeSut();
+      const created = helperRepository.create({
+        name: faker.name.findName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      });
+      await helperRepository.save(created);
+      const response = await sut.findByEmail(faker.internet.email());
+      expect(response).toBeFalsy();
     });
   });
 });
