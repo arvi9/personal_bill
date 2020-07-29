@@ -10,6 +10,7 @@ export namespace Authenticate {
   export type Model = {
     accessToken: string;
     account: {
+      id: string;
       name: string;
     };
   };
