@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { ComparationEncrypter } from "@/data/protocols";
 
-export class BcryptAdapter {
+export class BcryptAdapter implements ComparationEncrypter {
   async compare({
     value,
     valueToCompare,
