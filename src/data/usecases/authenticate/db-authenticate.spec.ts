@@ -1,5 +1,9 @@
 import faker from "faker";
-import { AccountsRepositorySpy, ComparationEncrypterSpy } from "@/data/tests";
+import {
+  AccountsRepositorySpy,
+  ComparationEncrypterSpy,
+  GenerateAccessTokenSpy,
+} from "@/data/tests";
 import { DbAuthenticate } from "./db-authenticate";
 import { Authenticate } from "@/domain/usecases";
 import { AccountNotFoundError, IncorrectPasswordError } from "@/domain/errors";
@@ -8,19 +12,23 @@ type SutTypes = {
   sut: DbAuthenticate;
   accountsRepositorySpy: AccountsRepositorySpy;
   comparationEncrypterSpy: ComparationEncrypterSpy;
+  generateAccessTokenSpy: GenerateAccessTokenSpy;
 };
 
 const makeSut = (): SutTypes => {
   const accountsRepositorySpy = new AccountsRepositorySpy();
   const comparationEncrypterSpy = new ComparationEncrypterSpy();
+  const generateAccessTokenSpy = new GenerateAccessTokenSpy();
   const sut = new DbAuthenticate(
     accountsRepositorySpy,
-    comparationEncrypterSpy
+    comparationEncrypterSpy,
+    generateAccessTokenSpy
   );
   return {
     sut,
     accountsRepositorySpy,
     comparationEncrypterSpy,
+    generateAccessTokenSpy,
   };
 };
 
@@ -56,5 +64,13 @@ describe("DbAuthenticate", () => {
     jest.spyOn(comparationEncrypterSpy, "compare").mockReturnValueOnce(false);
     const result = sut.auth(makeAuthenticateParams());
     expect(result).rejects.toThrow(new IncorrectPasswordError());
+  });
+  it("should calls GenerateAccessToken with correct params if password matches", async () => {
+    const { sut, accountsRepositorySpy, generateAccessTokenSpy } = makeSut();
+    await sut.auth(makeAuthenticateParams());
+    expect(generateAccessTokenSpy.params).toEqual({
+      id: accountsRepositorySpy.account.id,
+      email: accountsRepositorySpy.account.email,
+    });
   });
 });
