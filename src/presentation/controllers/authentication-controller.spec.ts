@@ -1,9 +1,9 @@
 import faker from "faker";
 import { AuthenticationController } from "./authentication-controller";
-import { badRequest, unauthorized } from "../protocols/http";
+import { badRequest, unauthorized, serverError } from "../protocols/http";
 import { Authenticate } from "@/domain/usecases";
 import { mockAccountWithToken } from "@/domain/tests/mock-account";
-import { UnauthorizedError } from "@/domain/errors";
+import { UnauthorizedError, ServerError } from "@/domain/errors";
 
 type SutTypes = {
   sut: AuthenticationController;
@@ -71,5 +71,18 @@ describe("AuthenticationController", () => {
       },
     });
     expect(response).toEqual(unauthorized(new UnauthorizedError()));
+  });
+  it("should returns server error if Authenticate throws", async () => {
+    const { sut, authenticateSpy } = makeSut();
+    jest.spyOn(authenticateSpy, "auth").mockImplementationOnce(() => {
+      throw new Error();
+    });
+    const response = await sut.handle({
+      body: {
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      },
+    });
+    expect(response).toEqual(serverError(new ServerError()));
   });
 });
