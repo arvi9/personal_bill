@@ -7,5 +7,11 @@ export class AuthenticationController {
         message: "Password is required",
       });
     }
+
+    if (!httpRequest.body.email) {
+      return badRequest({
+        message: "Email is required",
+      });
+    }
   }
 }
