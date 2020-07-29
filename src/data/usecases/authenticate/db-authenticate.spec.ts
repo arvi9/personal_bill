@@ -2,7 +2,7 @@ import faker from "faker";
 import { AccountsRepositorySpy, ComparationEncrypterSpy } from "@/data/tests";
 import { DbAuthenticate } from "./db-authenticate";
 import { Authenticate } from "@/domain/usecases";
-import { AccountNotFoundError } from "@/domain/errors";
+import { AccountNotFoundError, IncorrectPasswordError } from "@/domain/errors";
 
 type SutTypes = {
   sut: DbAuthenticate;
@@ -50,5 +50,11 @@ describe("DbAuthenticate", () => {
       value: accountsRepositorySpy.account.password,
       valueToCompare: params.password,
     });
+  });
+  it("should throws IncorrectPasswordError with ComparationEncrypter returns false", () => {
+    const { sut, comparationEncrypterSpy } = makeSut();
+    jest.spyOn(comparationEncrypterSpy, "compare").mockReturnValueOnce(false);
+    const result = sut.auth(makeAuthenticateParams());
+    expect(result).rejects.toThrow(new IncorrectPasswordError());
   });
 });
