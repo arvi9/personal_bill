@@ -8,15 +8,24 @@ const mockedJwt = jwt as jest.Mocked<typeof jwt>;
 const makeSut = (secretKey = faker.random.uuid()): JwtTokenAdapter =>
   new JwtTokenAdapter(secretKey);
 
+const makeParams = () => ({
+  email: faker.internet.email(),
+  id: faker.random.uuid(),
+});
+
 describe("JwtTokenAdapter", () => {
   it("should calls jsonwebtoken with correct values", () => {
     const secretKey = faker.random.uuid();
     const sut = makeSut(secretKey);
-    const params = {
-      email: faker.internet.email(),
-      id: faker.random.uuid(),
-    };
+    const params = makeParams();
     sut.generate(params);
     expect(mockedJwt.sign).toHaveBeenCalledWith(params, secretKey);
+  });
+  it("should returns the generated token on success", () => {
+    const token = faker.random.uuid();
+    mockedJwt.sign.mockImplementationOnce(() => token);
+    const sut = makeSut();
+    const result = sut.generate(makeParams());
+    expect(result).toBe(token);
   });
 });
