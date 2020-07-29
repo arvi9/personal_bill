@@ -4,7 +4,7 @@ import {
   ComparationEncrypter,
   GenerateAccessToken,
 } from "@/data/protocols";
-import { AccountNotFoundError, IncorrectPasswordError } from "@/domain/errors";
+import { IncorrectPasswordError } from "@/domain/errors";
 
 export class DbAuthenticate {
   constructor(
@@ -16,9 +16,7 @@ export class DbAuthenticate {
   async auth(params: Authenticate.Params): Promise<Authenticate.Model> {
     const account = await this.accountsRepository.findByEmail(params.email);
 
-    if (!account) {
-      throw new AccountNotFoundError();
-    }
+    if (!account) return null;
 
     const isEqual = await this.comparationEncrypter.compare({
       value: params.password,

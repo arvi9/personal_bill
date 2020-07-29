@@ -44,11 +44,11 @@ describe("DbAuthenticate", () => {
     await sut.auth(params);
     expect(accountsRepositorySpy.email).toEqual(params.email);
   });
-  it("should throws AccountNotFoundError if findByEmail returns null", () => {
+  it("should returns falsy if findByEmail returns null", async () => {
     const { sut, accountsRepositorySpy } = makeSut();
     accountsRepositorySpy.account = null;
-    const result = sut.auth(makeAuthenticateParams());
-    expect(result).rejects.toThrow(new AccountNotFoundError());
+    const result = await sut.auth(makeAuthenticateParams());
+    expect(result).toBeFalsy();
   });
   it("should calls ComparationEncrypter with correct passwords if findByEmail returns an account", async () => {
     const { sut, accountsRepositorySpy, comparationEncrypterSpy } = makeSut();
