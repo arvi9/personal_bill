@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "test": "npx jest --runInBand --passWithNoTests",
+    "test:watch": "yarn test --watchAll"
+  },
   "devDependencies": {
     "@types/jest": "^26.0.7",
     "@types/node": "^14.0.27",
