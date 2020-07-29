@@ -1,0 +1,13 @@
+{
+  "name": "personal_financing_api",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^26.0.7",
+    "@types/node": "^14.0.27",
+    "jest": "^26.1.0",
+    "ts-jest": "^26.1.4",
+    "typescript": "^3.9.7"
+  }
+}
