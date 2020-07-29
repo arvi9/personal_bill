@@ -1,15 +1,26 @@
 import faker from "faker";
 import { AuthenticationController } from "./authentication-controller";
 import { badRequest } from "../protocols/http";
+import { Authenticate } from "@/domain/usecases";
 
 type SutTypes = {
   sut: AuthenticationController;
+  authenticateSpy: AuthenticateSpy;
 };
 
 const makeSut = (): SutTypes => {
-  const sut = new AuthenticationController();
-  return { sut };
+  const authenticateSpy = new AuthenticateSpy();
+  const sut = new AuthenticationController(authenticateSpy);
+  return { sut, authenticateSpy };
 };
+
+class AuthenticateSpy implements Authenticate {
+  params: any;
+  auth(params: Authenticate.Params): Promise<Authenticate.Model> {
+    this.params = params;
+    return null;
+  }
+}
 
 describe("AuthenticationController", () => {
   it("should returns badRequest if password was not provided", async () => {
@@ -35,5 +46,16 @@ describe("AuthenticationController", () => {
         message: "Email is required",
       })
     );
+  });
+  it("should calls Authenticate use case with correct email and password", async () => {
+    const { sut, authenticateSpy } = makeSut();
+    const httpRequest = {
+      body: {
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      },
+    };
+    await sut.handle(httpRequest);
+    expect(authenticateSpy.params).toEqual(httpRequest.body);
   });
 });
