@@ -5,20 +5,24 @@ import {
   unauthorized,
   serverError,
   success,
+  HttpRequest,
 } from "../protocols/http";
 import { Authenticate } from "@/domain/usecases";
 import { mockAccountWithToken } from "@/domain/tests/mock-account";
 import { UnauthorizedError, ServerError } from "@/domain/errors";
+import { ValidationSpy } from "../test";
 
 type SutTypes = {
   sut: AuthenticationController;
   authenticateSpy: AuthenticateSpy;
+  validationSpy: ValidationSpy;
 };
 
 const makeSut = (): SutTypes => {
   const authenticateSpy = new AuthenticateSpy();
-  const sut = new AuthenticationController(authenticateSpy);
-  return { sut, authenticateSpy };
+  const validationSpy = new ValidationSpy();
+  const sut = new AuthenticationController(authenticateSpy, validationSpy);
+  return { sut, authenticateSpy, validationSpy };
 };
 
 class AuthenticateSpy implements Authenticate {
@@ -30,30 +34,19 @@ class AuthenticateSpy implements Authenticate {
   }
 }
 
+const makeFakeRequest = (): HttpRequest => ({
+  body: {
+    email: faker.internet.email(),
+    password: faker.internet.password(),
+  },
+});
+
 describe("AuthenticationController", () => {
-  it("should returns badRequest if password was not provided", async () => {
-    const { sut } = makeSut();
-    const httpRequest = {
-      body: { email: faker.internet.email() },
-    };
-    const httpResponse = await sut.handle(httpRequest);
-    expect(httpResponse).toEqual(
-      badRequest({
-        message: "Password is required",
-      })
-    );
-  });
-  it("should returns badRequest if email was not provided", async () => {
-    const { sut } = makeSut();
-    const httpRequest = {
-      body: { password: faker.internet.password() },
-    };
-    const httpResponse = await sut.handle(httpRequest);
-    expect(httpResponse).toEqual(
-      badRequest({
-        message: "Email is required",
-      })
-    );
+  it("should calls validation with correct input", async () => {
+    const { sut, validationSpy } = makeSut();
+    const request = makeFakeRequest();
+    await sut.handle(request);
+    expect(validationSpy.input).toEqual(request.body);
   });
   it("should calls Authenticate use case with correct email and password", async () => {
     const { sut, authenticateSpy } = makeSut();
