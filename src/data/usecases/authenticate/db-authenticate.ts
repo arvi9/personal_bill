@@ -1,6 +1,6 @@
 import { Authenticate } from "@/domain/usecases";
 import { AccountsRepository, ComparationEncrypter } from "@/data/protocols";
-import { AccountNotFoundError } from "@/domain/errors";
+import { AccountNotFoundError, IncorrectPasswordError } from "@/domain/errors";
 
 export class DbAuthenticate {
   constructor(
@@ -15,10 +15,14 @@ export class DbAuthenticate {
       throw new AccountNotFoundError();
     }
 
-    this.comparationEncrypter.compare({
+    const isEqual = this.comparationEncrypter.compare({
       value: account.password,
       valueToCompare: params.password,
     });
+
+    if (!isEqual) {
+      throw new IncorrectPasswordError();
+    }
 
     return null;
   }
