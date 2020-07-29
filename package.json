@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "test": "npx jest --runInBand --passWithNoTests",
-    "test:watch": "yarn test --watchAll",
+    "test:watch": "yarn test --watchAll --silent",
     "knex": "npx ts-node-dev ./node_modules/knex/bin/cli.js"
   },
   "devDependencies": {
@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
-    "jsonwebtoken": "^8.5.1",
-    "knex": "^0.21.2"
+    "jsonwebtoken": "^8.5.1"
   }
 }
