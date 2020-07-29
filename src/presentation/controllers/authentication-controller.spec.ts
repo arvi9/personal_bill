@@ -37,6 +37,12 @@ describe("AuthenticationController", () => {
     await sut.handle(request);
     expect(validationSpy.input).toEqual(request.body);
   });
+  it("should returns bad request if validation fails", async () => {
+    const { sut, validationSpy } = makeSut();
+    validationSpy.validationError = new Error("Missing param error");
+    const response = await sut.handle(makeFakeRequest());
+    expect(response).toEqual(badRequest(validationSpy.validationError));
+  });
   it("should calls Authenticate use case with correct email and password", async () => {
     const { sut, authenticateSpy } = makeSut();
     const httpRequest = {
