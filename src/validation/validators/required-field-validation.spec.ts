@@ -11,4 +11,13 @@ describe("RequiredFieldValidation", () => {
     const validation = sut.validate(input);
     expect(validation).toEqual(new RequiredFieldError("anyField"));
   });
+  it("should returns falsy if input is valid", () => {
+    const sut = new RequiredFieldValidation("anyField");
+    const input = {
+      anyField: faker.random.word(),
+      anotherField: faker.random.word(),
+    };
+    const validation = sut.validate(input);
+    expect(validation).toBeFalsy();
+  });
 });
