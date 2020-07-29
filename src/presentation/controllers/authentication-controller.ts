@@ -3,7 +3,9 @@ import {
   HttpRequest,
   HttpResponse,
   badRequest,
+  unauthorized,
 } from "@/presentation/protocols/http";
+import { UnauthorizedError } from "@/domain/errors";
 
 export class AuthenticationController {
   constructor(private readonly authenticate: Authenticate) {}
@@ -22,6 +24,10 @@ export class AuthenticationController {
     }
 
     const { email, password } = httpRequest.body;
-    await this.authenticate.auth({ email, password });
+    const authorized = await this.authenticate.auth({ email, password });
+
+    if (!authorized) {
+      return unauthorized(new UnauthorizedError());
+    }
   }
 }
