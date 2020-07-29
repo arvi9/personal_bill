@@ -1,5 +1,5 @@
 export interface ComparationEncrypter {
-  compare: (params: ComparationEncrypter.Params) => boolean;
+  compare: (params: ComparationEncrypter.Params) => Promise<boolean>;
 }
 
 export namespace ComparationEncrypter {
