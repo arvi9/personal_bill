@@ -12,3 +12,10 @@ export const unauthorized = (error: Error): HttpResponse => ({
     message: error.message,
   },
 });
+
+export const serverError = (error: Error): HttpResponse => ({
+  statusCode: HttpStatusCode.serverError,
+  body: {
+    message: error.message,
+  },
+});
