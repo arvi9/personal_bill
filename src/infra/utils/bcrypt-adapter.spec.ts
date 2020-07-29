@@ -20,4 +20,14 @@ describe("BcryptAdapter", () => {
       params.valueToCompare
     );
   });
+  it("should returns false if comparation fails", async () => {
+    const sut = makeSut();
+    mockedBcrypt.compare.mockResolvedValueOnce(false);
+    const params = {
+      value: faker.random.word(),
+      valueToCompare: faker.random.word(),
+    };
+    const result = await sut.compare(params);
+    expect(result).toBe(false);
+  });
 });
