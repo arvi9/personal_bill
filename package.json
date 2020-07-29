@@ -22,6 +22,7 @@
     "git-commit-msg-linter": "^2.4.4",
     "jest": "^26.1.0",
     "sqlite3": "^5.0.0",
+    "supertest": "^4.0.2",
     "ts-jest": "^26.1.4",
     "ts-node-dev": "^1.0.0-pre.56",
     "tsconfig-paths": "^3.9.0",
