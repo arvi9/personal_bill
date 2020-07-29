@@ -5,7 +5,7 @@ import {
   GenerateAccessToken,
 } from "@/data/protocols";
 
-export class DbAuthenticate {
+export class DbAuthenticate implements Authenticate {
   constructor(
     private readonly accountsRepository: AccountsRepository,
     private readonly comparationEncrypter: ComparationEncrypter,
