@@ -13,6 +13,8 @@ export class TypeOrmAccountsRepository implements AccountsRepository {
       },
     });
 
+    if (!account) return null;
+
     const { created_at, updated_at, ...restAccount } = account;
     return restAccount;
   }
