@@ -55,8 +55,8 @@ describe("DbAuthenticate", () => {
     const params = makeAuthenticateParams();
     await sut.auth(params);
     expect(comparationEncrypterSpy.params).toEqual({
-      value: accountsRepositorySpy.account.password,
-      valueToCompare: params.password,
+      value: params.password,
+      valueToCompare: accountsRepositorySpy.account.password,
     });
   });
   it("should throws IncorrectPasswordError with ComparationEncrypter returns false", () => {

@@ -20,9 +20,9 @@ export class DbAuthenticate {
       throw new AccountNotFoundError();
     }
 
-    const isEqual = this.comparationEncrypter.compare({
-      value: account.password,
-      valueToCompare: params.password,
+    const isEqual = await this.comparationEncrypter.compare({
+      value: params.password,
+      valueToCompare: account.password,
     });
 
     if (!isEqual) {

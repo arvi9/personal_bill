@@ -2,8 +2,8 @@ import { ComparationEncrypter } from "@/data/protocols";
 
 export class ComparationEncrypterSpy implements ComparationEncrypter {
   params: any;
-  compare(params: ComparationEncrypter.Params): boolean {
+  async compare(params: ComparationEncrypter.Params): Promise<boolean> {
     this.params = params;
-    return true;
+    return Promise.resolve(true);
   }
 }
