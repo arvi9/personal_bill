@@ -5,6 +5,7 @@ import {
   badRequest,
   unauthorized,
   serverError,
+  success,
 } from "@/presentation/protocols/http";
 import { UnauthorizedError, ServerError } from "@/domain/errors";
 
@@ -31,6 +32,8 @@ export class AuthenticationController {
       if (!authorized) {
         return unauthorized(new UnauthorizedError());
       }
+
+      return success(authorized);
     } catch (error) {
       return serverError(new ServerError());
     }
