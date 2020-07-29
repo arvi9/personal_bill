@@ -18,6 +18,7 @@
     "faker": "^4.1.0",
     "git-commit-msg-linter": "^2.4.4",
     "jest": "^26.1.0",
+    "sequelize-cli": "^6.2.0",
     "sqlite3": "^5.0.0",
     "ts-jest": "^26.1.4",
     "ts-node-dev": "^1.0.0-pre.56",
