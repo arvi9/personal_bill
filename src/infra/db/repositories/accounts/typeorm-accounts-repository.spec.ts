@@ -1,24 +1,22 @@
 import "reflect-metadata";
-import {
-  createConnection,
-  getConnection,
-  Connection,
-  getRepository,
-} from "typeorm";
+import { getRepository } from "typeorm";
 import { TypeOrmAccountsRepository } from "./typeorm-accounts-repository";
 import { AccountModel } from "../../models/account";
 import { mockAccount } from "@/domain/tests/mock-account";
+import connection from "@/infra/db/config/database";
 
 describe("TypeOrmAccountsRepository", () => {
-  let connection: Connection;
   beforeAll(async () => {
-    connection = await createConnection();
+    await connection.create();
+  });
+  beforeEach(async () => {
+    await connection.clear();
   });
   afterAll(async () => {
-    await getConnection().close();
+    await connection.close();
   });
   describe("findByEmail", () => {
-    it("should returns the correct user by a given email", async () => {
+    it("should returns the correct account by a given email", async () => {
       const account = mockAccount();
       const repository = getRepository(AccountModel);
       const created = repository.create(account);
