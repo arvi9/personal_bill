@@ -1,7 +1,9 @@
 import faker from "faker";
 import { AuthenticationController } from "./authentication-controller";
-import { badRequest } from "../protocols/http";
+import { badRequest, unauthorized } from "../protocols/http";
 import { Authenticate } from "@/domain/usecases";
+import { mockAccountWithToken } from "@/domain/tests/mock-account";
+import { UnauthorizedError } from "@/domain/errors";
 
 type SutTypes = {
   sut: AuthenticationController;
@@ -16,9 +18,10 @@ const makeSut = (): SutTypes => {
 
 class AuthenticateSpy implements Authenticate {
   params: any;
-  auth(params: Authenticate.Params): Promise<Authenticate.Model> {
+  account = mockAccountWithToken();
+  async auth(params: Authenticate.Params): Promise<Authenticate.Model> {
     this.params = params;
-    return null;
+    return this.account;
   }
 }
 
@@ -57,5 +60,16 @@ describe("AuthenticationController", () => {
     };
     await sut.handle(httpRequest);
     expect(authenticateSpy.params).toEqual(httpRequest.body);
+  });
+  it("should returns unauthorized if Authenticate returns falsy", async () => {
+    const { sut, authenticateSpy } = makeSut();
+    authenticateSpy.account = null;
+    const response = await sut.handle({
+      body: {
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      },
+    });
+    expect(response).toEqual(unauthorized(new UnauthorizedError()));
   });
 });
