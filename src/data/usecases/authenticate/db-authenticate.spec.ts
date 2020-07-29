@@ -1,5 +1,5 @@
 import faker from "faker";
-import { AccountsRepositorySpy } from "@/data/tests";
+import { AccountsRepositorySpy, ComparationEncrypterSpy } from "@/data/tests";
 import { DbAuthenticate } from "./db-authenticate";
 import { Authenticate } from "@/domain/usecases";
 import { AccountNotFoundError } from "@/domain/errors";
@@ -7,14 +7,20 @@ import { AccountNotFoundError } from "@/domain/errors";
 type SutTypes = {
   sut: DbAuthenticate;
   accountsRepositorySpy: AccountsRepositorySpy;
+  comparationEncrypterSpy: ComparationEncrypterSpy;
 };
 
 const makeSut = (): SutTypes => {
   const accountsRepositorySpy = new AccountsRepositorySpy();
-  const sut = new DbAuthenticate(accountsRepositorySpy);
+  const comparationEncrypterSpy = new ComparationEncrypterSpy();
+  const sut = new DbAuthenticate(
+    accountsRepositorySpy,
+    comparationEncrypterSpy
+  );
   return {
     sut,
     accountsRepositorySpy,
+    comparationEncrypterSpy,
   };
 };
 
@@ -35,5 +41,14 @@ describe("DbAuthenticate", () => {
     accountsRepositorySpy.account = null;
     const result = sut.auth(makeAuthenticateParams());
     expect(result).rejects.toThrow(new AccountNotFoundError());
+  });
+  it("should calls ComparationEncrypter with correct passwords if findByEmail returns an account", async () => {
+    const { sut, accountsRepositorySpy, comparationEncrypterSpy } = makeSut();
+    const params = makeAuthenticateParams();
+    await sut.auth(params);
+    expect(comparationEncrypterSpy.params).toEqual({
+      value: accountsRepositorySpy.account.password,
+      valueToCompare: params.password,
+    });
   });
 });
