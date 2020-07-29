@@ -33,4 +33,9 @@ describe("ValidationComposite", () => {
     const validation = sut.validate(makeInput());
     expect(validation).toEqual(error);
   });
+  it("should returns falsy if validations are ok", () => {
+    const { sut } = makeSut();
+    const validation = sut.validate(makeInput());
+    expect(validation).toBeFalsy();
+  });
 });
