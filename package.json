@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "test": "npx jest --runInBand --passWithNoTests",
-    "test:watch": "yarn test --watchAll"
+    "test:watch": "yarn test --watchAll",
+    "knex": "npx ts-node-dev ./node_modules/knex/bin/cli.js"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
@@ -18,6 +19,7 @@
     "jest": "^26.1.0",
     "sqlite3": "^5.0.0",
     "ts-jest": "^26.1.4",
+    "ts-node-dev": "^1.0.0-pre.56",
     "typescript": "^3.9.7"
   },
   "dependencies": {

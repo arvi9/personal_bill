@@ -1,13 +1,11 @@
-import knex from "knex";
 import path from "path";
 
-const test = knex({
+export default {
   client: "sqlite3",
   connection: ":memory:",
+  useNullAsDefault: true,
   migrations: {
     tableName: "migrations",
     directory: path.resolve(__dirname, "..", "migrations"),
   },
-});
-
-export default { test };
+};
