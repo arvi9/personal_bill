@@ -32,6 +32,7 @@ export class AuthenticationController {
 
       return success(authorized);
     } catch (error) {
+      console.log("error", error);
       return serverError(new ServerError());
     }
   }

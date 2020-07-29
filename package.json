@@ -4,8 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "npx jest --runInBand --passWithNoTests",
-    "test:watch": "yarn test --watchAll --silent",
+    "test": "npx jest --runInBand --passWithNoTests --watchAll --silent",
+    "test:unit": "yarn test -c jest-unit-config.js",
+    "test:integration": "yarn test -c jest-integration-config.js",
     "test:coverage": "yarn test --coverage",
     "dev:server": "npx ts-node-dev -r tsconfig-paths/register ./src/main/index.ts",
     "typeorm": "npx ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
@@ -17,6 +18,7 @@
     "@types/jest": "^26.0.7",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^14.0.27",
+    "@types/supertest": "^2.0.10",
     "@types/validator": "^13.1.0",
     "faker": "^4.1.0",
     "git-commit-msg-linter": "^2.4.4",
