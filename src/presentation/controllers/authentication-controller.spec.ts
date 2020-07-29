@@ -12,7 +12,7 @@ const makeSut = (): SutTypes => {
 };
 
 describe("AuthenticationController", () => {
-  it("should returns badRequest if email was not provided", async () => {
+  it("should returns badRequest if password was not provided", async () => {
     const { sut } = makeSut();
     const httpRequest = {
       body: { email: faker.internet.email() },
@@ -21,6 +21,18 @@ describe("AuthenticationController", () => {
     expect(httpResponse).toEqual(
       badRequest({
         message: "Password is required",
+      })
+    );
+  });
+  it("should returns badRequest if email was not provided", async () => {
+    const { sut } = makeSut();
+    const httpRequest = {
+      body: { password: faker.internet.password() },
+    };
+    const httpResponse = await sut.handle(httpRequest);
+    expect(httpResponse).toEqual(
+      badRequest({
+        message: "Email is required",
       })
     );
   });
