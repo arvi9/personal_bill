@@ -13,13 +13,13 @@ describe("Authentication Route", () => {
   afterAll(async () => {
     await connection.close();
   });
-  it("should returns access token and account on success", () => {
+  it("should returns unauthorized if user was not found", (done) => {
     request(app)
       .post("/login")
       .send({
         email: faker.internet.email(),
         password: faker.internet.password(),
       })
-      .expect(400);
+      .expect(401, done);
   });
 });

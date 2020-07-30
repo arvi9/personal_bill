@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "npx jest --runInBand --passWithNoTests --watchAll --silent",
+    "test": "npx jest --runInBand --passWithNoTests --watchAll",
     "test:unit": "yarn test -c jest-unit-config.js",
     "test:integration": "yarn test -c jest-integration-config.js",
     "test:coverage": "yarn test --coverage",
