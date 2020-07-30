@@ -6,7 +6,6 @@ export const insertOneAccount = async (
   repository: Repository<AccountModel>,
   account = mockAccount()
 ): Promise<void> => {
-      const created = repository.create(account);
-      await repository.save(created);
-    });
+  const created = repository.create(account);
+  await repository.save(created);
 };
