@@ -54,4 +54,12 @@ describe("Authentication Route", () => {
       })
       .expect(401, done);
   });
+  it("should returns bad request if email and password was not provided", async (done) => {
+    request(app)
+      .post("/login")
+      .send({
+        [faker.database.column()]: faker.random.word(),
+      })
+      .expect(400, done);
+  });
 });
