@@ -14,6 +14,11 @@ export class CreateExpensesTable1596221864437 implements MigrationInterface {
             isPrimary: true,
           },
           {
+            name: "account_id",
+            type: "varchar",
+            length: "36",
+          },
+          {
             name: "description",
             type: "varchar",
             length: "128",
@@ -36,6 +41,16 @@ export class CreateExpensesTable1596221864437 implements MigrationInterface {
             name: "updated_at",
             type: "timestamp",
             default: "now()",
+          },
+        ],
+        foreignKeys: [
+          {
+            name: "expenses_account_id_foreign",
+            columnNames: ["account_id"],
+            referencedColumnNames: ["id"],
+            referencedTableName: "accounts",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
           },
         ],
       })
