@@ -26,3 +26,8 @@ export const success = (body: any): HttpResponse => ({
   statusCode: HttpStatusCode.ok,
   body,
 });
+
+export const created = (body?: any): HttpResponse => ({
+  statusCode: HttpStatusCode.created,
+  body,
+});

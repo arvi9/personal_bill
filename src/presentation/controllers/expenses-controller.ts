@@ -3,6 +3,7 @@ import {
   HttpResponse,
   badRequest,
   serverError,
+  created,
 } from "@/presentation/protocols/http";
 import { Validation } from "@/presentation/protocols";
 import { AddExpense } from "@/domain/usecases";
@@ -21,8 +22,8 @@ export class ExpensesController {
         return badRequest(validationError);
       }
 
-      await this.addExpense.add(httpRequest.body);
-      return null;
+      const expense = await this.addExpense.add(httpRequest.body);
+      return created(expense);
     } catch {
       return serverError(new ServerError());
     }
