@@ -5,6 +5,9 @@ import { ExpenseModel, AccountModel } from "@/infra/db/models";
 import connection from "@/infra/db/config/database";
 import { insertOneAccount } from "../../seeds";
 
+const makeSut = (): TypeOrmAddExpenseRepository =>
+  new TypeOrmAddExpenseRepository();
+
 describe("TypeOrmAddExpenseRepository", () => {
   beforeAll(async () => {
     await connection.create();
@@ -15,12 +18,12 @@ describe("TypeOrmAddExpenseRepository", () => {
   afterAll(async () => {
     await connection.close();
   });
-  it("should add a new expense to the database", async () => {
+  it.only("should add a new expense to the database", async () => {
     const repository = getRepository(ExpenseModel);
     const accountRepository = getRepository(AccountModel);
     const account = mockAccount();
     await insertOneAccount(accountRepository, account);
-    const sut = new TypeOrmAddExpenseRepository();
+    const sut = makeSut();
     await sut.add({ ...mockAddExpense(), account });
     const expenses = await repository.find();
     expect(expenses).toHaveLength(1);
