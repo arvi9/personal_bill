@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "test": "npx jest --runInBand --passWithNoTests --watchAll",
-    "test:unit": "yarn test -c jest-unit-config.js",
+    "test:unit": "yarn test -c jest-unit-config.js --silent",
     "test:integration": "yarn test -c jest-integration-config.js",
     "test:coverage": "yarn test --coverage",
     "dev:server": "npx ts-node-dev -r tsconfig-paths/register ./src/main/index.ts",
