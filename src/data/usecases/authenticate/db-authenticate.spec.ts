@@ -37,13 +37,13 @@ const makeAuthenticateParams = (): Authenticate.Params => ({
 });
 
 describe("DbAuthenticate", () => {
-  it("should calls AccountsRepository.findByEmail with correct values", async () => {
+  it("should calls LoadAccountByEmailRepository with correct values", async () => {
     const { sut, accountsRepositorySpy } = makeSut();
     const params = makeAuthenticateParams();
     await sut.auth(params);
     expect(accountsRepositorySpy.email).toEqual(params.email);
   });
-  it("should returns falsy if findByEmail returns null", async () => {
+  it("should returns falsy if LoadAccountByEmailRepository returns null", async () => {
     const { sut, accountsRepositorySpy } = makeSut();
     accountsRepositorySpy.account = null;
     const result = await sut.auth(makeAuthenticateParams());

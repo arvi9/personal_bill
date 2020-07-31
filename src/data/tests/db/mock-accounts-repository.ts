@@ -1,10 +1,12 @@
-import { FindAccountRepository } from "@/data/protocols";
+import { LoadAccountByEmailRepository } from "@/data/protocols";
 import { mockAccount } from "@/domain/tests/mock-account";
 
-export class AccountsRepositorySpy implements FindAccountRepository {
+export class AccountsRepositorySpy implements LoadAccountByEmailRepository {
   email: string;
   account = mockAccount();
-  async findByEmail(email: string): Promise<FindAccountRepository.Response> {
+  async findByEmail(
+    email: string
+  ): Promise<LoadAccountByEmailRepository.Response> {
     this.email = email;
     return this.account;
   }
