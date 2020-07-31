@@ -1,6 +1,6 @@
 import { AddExpenseRepository } from "@/data/protocols";
 
-export class AddExpenseRepositorySpy implements AddExpenseRepository {
+export class AddExpenseRepositoryMock implements AddExpenseRepository {
   params: any;
   async add(
     params: AddExpenseRepository.Params
