@@ -14,7 +14,6 @@ export class TypeOrmAddExpenseRepository implements AddExpenseRepository {
       value: params.value,
     });
 
-    await repository.save(expense);
-    return null;
+    return repository.save(expense);
   }
 }
