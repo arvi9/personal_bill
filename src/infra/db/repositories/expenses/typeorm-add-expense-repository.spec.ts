@@ -18,14 +18,18 @@ describe("TypeOrmAddExpenseRepository", () => {
   afterAll(async () => {
     await connection.close();
   });
-  it.only("should add a new expense to the database", async () => {
+  it("should add a new expense to the database", async () => {
     const repository = getRepository(ExpenseModel);
     const accountRepository = getRepository(AccountModel);
     const account = mockAccount();
     await insertOneAccount(accountRepository, account);
     const sut = makeSut();
-    await sut.add({ ...mockAddExpense(), account });
+    const addExpense = mockAddExpense();
+    const result = await sut.add({ ...addExpense, account });
     const expenses = await repository.find();
     expect(expenses).toHaveLength(1);
+    expect(result.value).toBe(addExpense.value);
+    expect(result.description).toBe(addExpense.description);
+    expect(result.date).toBe(addExpense.date);
   });
 });
