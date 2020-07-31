@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { Account } from "@/domain/models";
+import { ExpenseModel } from "./expense";
 
 @Entity("accounts")
 export class AccountModel implements Account {
@@ -20,6 +22,9 @@ export class AccountModel implements Account {
 
   @Column()
   password: string;
+
+  @OneToMany(() => ExpenseModel, (expense) => expense.account)
+  expenses: ExpenseModel[];
 
   @CreateDateColumn()
   created_at: Date;
