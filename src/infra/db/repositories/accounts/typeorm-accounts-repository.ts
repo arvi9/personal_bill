@@ -6,8 +6,11 @@ import { AccountModel } from "@/infra/db/models/account";
 export class TypeOrmAccountsRepository implements FindAccountRepository {
   private repository: Repository<AccountModel>;
 
-  async findByEmail(email: string): Promise<FindAccountRepository.Response> {
+  constructor() {
     this.repository = getRepository(AccountModel);
+  }
+
+  async findByEmail(email: string): Promise<FindAccountRepository.Response> {
     const account = await this.repository.findOne({
       where: {
         email,
