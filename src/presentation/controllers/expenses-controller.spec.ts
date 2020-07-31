@@ -1,9 +1,11 @@
+import faker from "faker";
 import { ExpensesController } from "./expenses-controller";
 import { mockAddExpense } from "@/domain/tests";
 import { ValidationSpy } from "@/presentation/test";
-import { badRequest, serverError } from "../protocols/http";
+import { badRequest, serverError, created } from "../protocols/http";
 import { AddExpense } from "@/domain/usecases";
 import { ServerError } from "@/domain/errors";
+import { Expense } from "@/domain/models";
 
 type SutTypes = {
   sut: ExpensesController;
@@ -13,9 +15,16 @@ type SutTypes = {
 
 class AddExpenseSpy implements AddExpense {
   params: any;
+  expense = {
+    id: faker.random.uuid(),
+    accountId: faker.random.uuid(),
+    date: faker.date.recent(),
+    description: faker.random.words(),
+    value: faker.random.number(),
+  };
   async add(params: AddExpense.Params): Promise<AddExpense.Model> {
     this.params = params;
-    return null;
+    return this.expense;
   }
 }
 
@@ -60,5 +69,10 @@ describe("ExpensesController", () => {
     jest.spyOn(addExpenseSpy, "add").mockRejectedValueOnce(new Error());
     const response = await sut.store(makeRequest());
     expect(response).toEqual(serverError(new ServerError()));
+  });
+  it("should returns created on success", async () => {
+    const { sut, addExpenseSpy } = makeSut();
+    const response = await sut.store(makeRequest());
+    expect(response).toEqual(created(addExpenseSpy.expense));
   });
 });
