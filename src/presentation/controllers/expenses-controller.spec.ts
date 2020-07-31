@@ -2,18 +2,30 @@ import { ExpensesController } from "./expenses-controller";
 import { mockAddExpense } from "@/domain/tests";
 import { ValidationSpy } from "@/presentation/test";
 import { badRequest } from "../protocols/http";
+import { AddExpense } from "@/domain/usecases";
 
 type SutTypes = {
   sut: ExpensesController;
   validationSpy: ValidationSpy;
+  addExpenseSpy: AddExpenseSpy;
 };
+
+class AddExpenseSpy implements AddExpense {
+  params: any;
+  async add(params: AddExpense.Params): Promise<AddExpense.Model> {
+    this.params = params;
+    return null;
+  }
+}
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy();
-  const sut = new ExpensesController(validationSpy);
+  const addExpenseSpy = new AddExpenseSpy();
+  const sut = new ExpensesController(validationSpy, addExpenseSpy);
   return {
     sut,
     validationSpy,
+    addExpenseSpy,
   };
 };
 
@@ -35,5 +47,11 @@ describe("ExpensesController", () => {
     validationSpy.validationError = new Error("Validation Error");
     const httpResponse = await sut.store(makeRequest());
     expect(httpResponse).toEqual(badRequest(new Error("Validation Error")));
+  });
+  it("should calls AddExpense with correct values", async () => {
+    const { sut, addExpenseSpy } = makeSut();
+    const request = makeRequest();
+    await sut.store(request);
+    expect(addExpenseSpy.params).toEqual(request.body);
   });
 });
