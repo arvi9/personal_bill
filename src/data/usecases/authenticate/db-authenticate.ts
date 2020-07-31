@@ -13,7 +13,7 @@ export class DbAuthenticate implements Authenticate {
   ) {}
 
   async auth(params: Authenticate.Params): Promise<Authenticate.Model> {
-    const account = await this.accountsRepository.findByEmail(params.email);
+    const account = await this.accountsRepository.load(params.email);
 
     if (!account) return null;
 
