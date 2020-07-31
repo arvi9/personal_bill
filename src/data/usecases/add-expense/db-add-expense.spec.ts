@@ -1,7 +1,7 @@
 import faker from "faker";
 import { DbAddExpense } from "./db-add-expense";
-import { mockAccount } from "@/domain/tests/mock-account";
 import { AddExpenseRepositorySpy } from "@/data/tests";
+import { mockAddExpense } from "@/domain/tests/";
 
 type SutTypes = {
   sut: DbAddExpense;
@@ -20,12 +20,7 @@ const makeSut = (): SutTypes => {
 describe("DbAddExpense", () => {
   it("should calls AddExpenseRepository with correct values", async () => {
     const { sut, addExpenseRepositorySpy } = makeSut();
-    const expense = {
-      date: faker.date.recent(),
-      description: faker.random.words(),
-      value: faker.random.number(),
-      account: mockAccount(),
-    };
+    const expense = mockAddExpense();
     await sut.add(expense);
     expect(addExpenseRepositorySpy.params).toEqual(expense);
   });
