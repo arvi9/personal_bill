@@ -1,22 +1,12 @@
 import faker from "faker";
 import { DbAddExpense } from "./db-add-expense";
 import { mockAccount } from "@/domain/tests/mock-account";
-import { AddExpenseRepository } from "@/data/protocols";
+import { AddExpenseRepositorySpy } from "@/data/tests";
 
 type SutTypes = {
   sut: DbAddExpense;
   addExpenseRepositorySpy: AddExpenseRepositorySpy;
 };
-
-class AddExpenseRepositorySpy implements AddExpenseRepository {
-  params: any;
-  async add(
-    params: AddExpenseRepository.Params
-  ): Promise<AddExpenseRepository.Model> {
-    this.params = params;
-    return null;
-  }
-}
 
 const makeSut = (): SutTypes => {
   const addExpenseRepositorySpy = new AddExpenseRepositorySpy();
