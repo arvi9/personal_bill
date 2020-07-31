@@ -1,8 +1,9 @@
 import { ExpensesController } from "./expenses-controller";
 import { mockAddExpense } from "@/domain/tests";
 import { ValidationSpy } from "@/presentation/test";
-import { badRequest } from "../protocols/http";
+import { badRequest, serverError } from "../protocols/http";
 import { AddExpense } from "@/domain/usecases";
+import { ServerError } from "@/domain/errors";
 
 type SutTypes = {
   sut: ExpensesController;
@@ -53,5 +54,11 @@ describe("ExpensesController", () => {
     const request = makeRequest();
     await sut.store(request);
     expect(addExpenseSpy.params).toEqual(request.body);
+  });
+  it("should returns server error if AddExpense throws", async () => {
+    const { sut, addExpenseSpy } = makeSut();
+    jest.spyOn(addExpenseSpy, "add").mockRejectedValueOnce(new Error());
+    const response = await sut.store(makeRequest());
+    expect(response).toEqual(serverError(new ServerError()));
   });
 });
