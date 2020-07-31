@@ -2,9 +2,11 @@ import {
   HttpRequest,
   HttpResponse,
   badRequest,
+  serverError,
 } from "@/presentation/protocols/http";
 import { Validation } from "@/presentation/protocols";
 import { AddExpense } from "@/domain/usecases";
+import { ServerError } from "@/domain/errors";
 
 export class ExpensesController {
   constructor(
@@ -13,12 +15,16 @@ export class ExpensesController {
   ) {}
 
   async store(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const validationError = this.validation.validate(httpRequest.body);
-    if (validationError) {
-      return badRequest(validationError);
-    }
+    try {
+      const validationError = this.validation.validate(httpRequest.body);
+      if (validationError) {
+        return badRequest(validationError);
+      }
 
-    await this.addExpense.add(httpRequest.body);
-    return null;
+      await this.addExpense.add(httpRequest.body);
+      return null;
+    } catch {
+      return serverError(new ServerError());
+    }
   }
 }
