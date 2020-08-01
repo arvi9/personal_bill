@@ -6,6 +6,7 @@ export const mockAccount = (): Account => ({
   id: faker.random.uuid(),
   email: faker.internet.email(),
   name: faker.name.findName(),
+  accessToken: faker.random.uuid(),
   password: faker.internet.password(),
 });
 

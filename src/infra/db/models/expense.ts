@@ -23,7 +23,7 @@ export class ExpenseModel implements Expense {
   @Column()
   description: string;
 
-  @Column("account_id")
+  @Column({ name: "account_id" })
   accountId: string;
 
   @ManyToOne(() => AccountModel, (account) => account.expenses)

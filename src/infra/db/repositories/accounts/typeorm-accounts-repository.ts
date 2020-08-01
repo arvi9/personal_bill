@@ -1,9 +1,13 @@
 import { EntityRepository, getRepository, Repository } from "typeorm";
-import { LoadAccountByEmailRepository } from "@/data/protocols";
+import {
+  LoadAccountByEmailRepository,
+  UpdateAccessTokenRepository,
+} from "@/data/protocols";
 import { AccountModel } from "@/infra/db/models/account";
 
 @EntityRepository(AccountModel)
-export class TypeOrmAccountsRepository implements LoadAccountByEmailRepository {
+export class TypeOrmAccountsRepository
+  implements LoadAccountByEmailRepository, UpdateAccessTokenRepository {
   private repository: Repository<AccountModel>;
 
   constructor() {
@@ -23,5 +27,13 @@ export class TypeOrmAccountsRepository implements LoadAccountByEmailRepository {
 
     const { created_at, updated_at, ...restAccount } = account;
     return restAccount;
+  }
+
+  async updateAccessToken(
+    params: UpdateAccessTokenRepository.Params
+  ): Promise<void> {
+    const account = await this.repository.findOne(params.accountId);
+    account.accessToken = params.accessToken;
+    await this.repository.save(account);
   }
 }
