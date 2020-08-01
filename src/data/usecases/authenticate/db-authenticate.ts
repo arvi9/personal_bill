@@ -3,13 +3,15 @@ import {
   LoadAccountByEmailRepository,
   ComparationEncrypter,
   GenerateAccessToken,
+  UpdateAccessTokenRepository,
 } from "@/data/protocols";
 
 export class DbAuthenticate implements Authenticate {
   constructor(
     private readonly accountsRepository: LoadAccountByEmailRepository,
     private readonly comparationEncrypter: ComparationEncrypter,
-    private readonly generateAccessToken: GenerateAccessToken
+    private readonly generateAccessToken: GenerateAccessToken,
+    private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
   ) {}
 
   async auth(params: Authenticate.Params): Promise<Authenticate.Model> {
@@ -27,6 +29,11 @@ export class DbAuthenticate implements Authenticate {
     const accessToken = this.generateAccessToken.generate({
       id: account.id,
       email: account.email,
+    });
+
+    await this.updateAccessTokenRepository.update({
+      accountId: account.id,
+      accessToken,
     });
 
     return { accessToken, account: { id: account.id, name: account.name } };
