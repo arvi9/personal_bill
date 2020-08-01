@@ -56,9 +56,11 @@ describe("DbAuthenticate", () => {
   });
   it("should throws if LoadAccountByEmailRepository throws", () => {
     const { sut, accountsRepositorySpy } = makeSut();
-    jest.spyOn(accountsRepositorySpy, "load").mockImplementationOnce(() => {
-      throw new Error();
-    });
+    jest
+      .spyOn(accountsRepositorySpy, "loadByEmail")
+      .mockImplementationOnce(() => {
+        throw new Error();
+      });
     const result = sut.auth(makeAuthenticateParams());
     expect(result).rejects.toThrow(new Error());
   });
@@ -114,7 +116,7 @@ describe("DbAuthenticate", () => {
   it("should throws if UpdateAccessTokenRepository throws", () => {
     const { sut, updateAccessTokenRepositoryMock } = makeSut();
     jest
-      .spyOn(updateAccessTokenRepositoryMock, "update")
+      .spyOn(updateAccessTokenRepositoryMock, "updateAccessToken")
       .mockImplementationOnce(() => {
         throw new Error();
       });

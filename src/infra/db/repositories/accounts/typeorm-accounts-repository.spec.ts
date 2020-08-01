@@ -26,13 +26,13 @@ describe("TypeOrmAccountsRepository", () => {
   afterAll(async () => {
     await connection.close();
   });
-  describe("findByEmail", () => {
+  describe("loadByEmail", () => {
     it("should returns the correct account by a given email", async () => {
       const { sut, helperRepository } = makeSut();
       const account = mockAccount();
       const created = helperRepository.create(account);
       await helperRepository.save(created);
-      const response = await sut.findByEmail(account.email);
+      const response = await sut.loadByEmail(account.email);
       expect(response).toEqual(account);
     });
     it("should returns falsy if the account is not found", async () => {
@@ -43,7 +43,7 @@ describe("TypeOrmAccountsRepository", () => {
         password: faker.internet.password(),
       });
       await helperRepository.save(created);
-      const response = await sut.findByEmail(faker.internet.email());
+      const response = await sut.loadByEmail(faker.internet.email());
       expect(response).toBeFalsy();
     });
     it("should throws if typeorm throws", () => {
@@ -51,7 +51,7 @@ describe("TypeOrmAccountsRepository", () => {
       jest.spyOn(helperRepository, "findOne").mockImplementationOnce(() => {
         throw new Error();
       });
-      const result = sut.findByEmail(faker.internet.email());
+      const result = sut.loadByEmail(faker.internet.email());
       expect(result).rejects.toThrow(new Error());
     });
   });
