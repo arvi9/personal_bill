@@ -111,4 +111,14 @@ describe("DbAuthenticate", () => {
       accessToken: generateAccessTokenSpy.accessToken,
     });
   });
+  it("should throws if UpdateAccessTokenRepository throws", () => {
+    const { sut, updateAccessTokenRepositoryMock } = makeSut();
+    jest
+      .spyOn(updateAccessTokenRepositoryMock, "update")
+      .mockImplementationOnce(() => {
+        throw new Error();
+      });
+    const result = sut.auth(makeAuthenticateParams());
+    expect(result).rejects.toThrow(new Error());
+  });
 });
