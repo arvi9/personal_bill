@@ -6,28 +6,33 @@ import {
 } from "@/data/tests";
 import { DbAuthenticate } from "./db-authenticate";
 import { Authenticate } from "@/domain/usecases";
+import { UpdateAccessTokenRepositoryMock } from "@/data/tests/db/mock-update-token-repository";
 
 type SutTypes = {
   sut: DbAuthenticate;
   accountsRepositorySpy: AccountsRepositorySpy;
   comparationEncrypterSpy: ComparationEncrypterSpy;
   generateAccessTokenSpy: GenerateAccessTokenSpy;
+  updateAccessTokenRepositoryMock: UpdateAccessTokenRepositoryMock;
 };
 
 const makeSut = (): SutTypes => {
   const accountsRepositorySpy = new AccountsRepositorySpy();
   const comparationEncrypterSpy = new ComparationEncrypterSpy();
   const generateAccessTokenSpy = new GenerateAccessTokenSpy();
+  const updateAccessTokenRepositoryMock = new UpdateAccessTokenRepositoryMock();
   const sut = new DbAuthenticate(
     accountsRepositorySpy,
     comparationEncrypterSpy,
-    generateAccessTokenSpy
+    generateAccessTokenSpy,
+    updateAccessTokenRepositoryMock
   );
   return {
     sut,
     accountsRepositorySpy,
     comparationEncrypterSpy,
     generateAccessTokenSpy,
+    updateAccessTokenRepositoryMock,
   };
 };
 
@@ -57,7 +62,7 @@ describe("DbAuthenticate", () => {
     const result = sut.auth(makeAuthenticateParams());
     expect(result).rejects.toThrow(new Error());
   });
-  it("should calls ComparationEncrypter with correct passwords if findByEmail returns an account", async () => {
+  it("should calls ComparationEncrypter with correct password if repository returns an account", async () => {
     const { sut, accountsRepositorySpy, comparationEncrypterSpy } = makeSut();
     const params = makeAuthenticateParams();
     await sut.auth(params);
@@ -91,6 +96,19 @@ describe("DbAuthenticate", () => {
         id: accountsRepositorySpy.account.id,
         name: accountsRepositorySpy.account.name,
       },
+    });
+  });
+  it("should calls UpdateAccessTokenRepository with correct values", async () => {
+    const {
+      sut,
+      accountsRepositorySpy,
+      generateAccessTokenSpy,
+      updateAccessTokenRepositoryMock,
+    } = makeSut();
+    await sut.auth(makeAuthenticateParams());
+    expect(updateAccessTokenRepositoryMock.params).toEqual({
+      accountId: accountsRepositorySpy.account.id,
+      accessToken: generateAccessTokenSpy.accessToken,
     });
   });
 });
