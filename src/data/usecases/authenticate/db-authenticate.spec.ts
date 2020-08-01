@@ -1,7 +1,7 @@
 import faker from "faker";
 import {
   AccountsRepositorySpy,
-  ComparationEncrypterSpy,
+  HashComparerSpy,
   GenerateAccessTokenSpy,
 } from "@/data/tests";
 import { DbAuthenticate } from "./db-authenticate";
@@ -11,26 +11,26 @@ import { UpdateAccessTokenRepositoryMock } from "@/data/tests/db/mock-update-tok
 type SutTypes = {
   sut: DbAuthenticate;
   accountsRepositorySpy: AccountsRepositorySpy;
-  comparationEncrypterSpy: ComparationEncrypterSpy;
+  hashComparerSpy: HashComparerSpy;
   generateAccessTokenSpy: GenerateAccessTokenSpy;
   updateAccessTokenRepositoryMock: UpdateAccessTokenRepositoryMock;
 };
 
 const makeSut = (): SutTypes => {
   const accountsRepositorySpy = new AccountsRepositorySpy();
-  const comparationEncrypterSpy = new ComparationEncrypterSpy();
+  const hashComparerSpy = new HashComparerSpy();
   const generateAccessTokenSpy = new GenerateAccessTokenSpy();
   const updateAccessTokenRepositoryMock = new UpdateAccessTokenRepositoryMock();
   const sut = new DbAuthenticate(
     accountsRepositorySpy,
-    comparationEncrypterSpy,
+    hashComparerSpy,
     generateAccessTokenSpy,
     updateAccessTokenRepositoryMock
   );
   return {
     sut,
     accountsRepositorySpy,
-    comparationEncrypterSpy,
+    hashComparerSpy,
     generateAccessTokenSpy,
     updateAccessTokenRepositoryMock,
   };
@@ -62,19 +62,19 @@ describe("DbAuthenticate", () => {
     const result = sut.auth(makeAuthenticateParams());
     expect(result).rejects.toThrow(new Error());
   });
-  it("should calls ComparationEncrypter with correct password if repository returns an account", async () => {
-    const { sut, accountsRepositorySpy, comparationEncrypterSpy } = makeSut();
+  it("should calls hashComparer with correct password if repository returns an account", async () => {
+    const { sut, accountsRepositorySpy, hashComparerSpy } = makeSut();
     const params = makeAuthenticateParams();
     await sut.auth(params);
-    expect(comparationEncrypterSpy.params).toEqual({
+    expect(hashComparerSpy.params).toEqual({
       value: params.password,
       valueToCompare: accountsRepositorySpy.account.password,
     });
   });
-  it("should return falsy if ComparationEncrypter returns false", async () => {
-    const { sut, comparationEncrypterSpy } = makeSut();
+  it("should return falsy if HashComparer returns false", async () => {
+    const { sut, hashComparerSpy } = makeSut();
     jest
-      .spyOn(comparationEncrypterSpy, "compare")
+      .spyOn(hashComparerSpy, "compare")
       .mockImplementationOnce(() => Promise.resolve(false));
     const result = await sut.auth(makeAuthenticateParams());
     expect(result).toBeFalsy();

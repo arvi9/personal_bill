@@ -1,7 +1,7 @@
 import { Authenticate } from "@/domain/usecases";
 import {
   LoadAccountByEmailRepository,
-  ComparationEncrypter,
+  HashComparer,
   GenerateAccessToken,
   UpdateAccessTokenRepository,
 } from "@/data/protocols";
@@ -9,7 +9,7 @@ import {
 export class DbAuthenticate implements Authenticate {
   constructor(
     private readonly accountsRepository: LoadAccountByEmailRepository,
-    private readonly comparationEncrypter: ComparationEncrypter,
+    private readonly hashComparer: HashComparer,
     private readonly generateAccessToken: GenerateAccessToken,
     private readonly updateAccessTokenRepository: UpdateAccessTokenRepository
   ) {}
@@ -19,7 +19,7 @@ export class DbAuthenticate implements Authenticate {
 
     if (!account) return null;
 
-    const isEqual = await this.comparationEncrypter.compare({
+    const isEqual = await this.hashComparer.compare({
       value: params.password,
       valueToCompare: account.password,
     });

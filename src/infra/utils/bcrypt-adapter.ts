@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt";
-import { ComparationEncrypter } from "@/data/protocols";
+import { HashComparer } from "@/data/protocols";
 
-export class BcryptAdapter implements ComparationEncrypter {
+export class BcryptAdapter implements HashComparer {
   async compare({
     value,
     valueToCompare,
-  }: ComparationEncrypter.Params): Promise<boolean> {
+  }: HashComparer.Params): Promise<boolean> {
     return bcrypt.compare(value, valueToCompare);
   }
 }
