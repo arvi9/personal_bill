@@ -49,6 +49,14 @@ describe("DbAuthenticate", () => {
     const result = await sut.auth(makeAuthenticateParams());
     expect(result).toBeFalsy();
   });
+  it("should throws if LoadAccountByEmailRepository throws", () => {
+    const { sut, accountsRepositorySpy } = makeSut();
+    jest.spyOn(accountsRepositorySpy, "load").mockImplementationOnce(() => {
+      throw new Error();
+    });
+    const result = sut.auth(makeAuthenticateParams());
+    expect(result).rejects.toThrow(new Error());
+  });
   it("should calls ComparationEncrypter with correct passwords if findByEmail returns an account", async () => {
     const { sut, accountsRepositorySpy, comparationEncrypterSpy } = makeSut();
     const params = makeAuthenticateParams();
