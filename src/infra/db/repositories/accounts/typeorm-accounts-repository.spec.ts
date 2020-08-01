@@ -1,9 +1,10 @@
 import faker from "faker";
-import { getRepository, Repository } from "typeorm";
+import { getRepository, Repository, getConnection } from "typeorm";
 import { TypeOrmAccountsRepository } from "./typeorm-accounts-repository";
-import { AccountModel } from "../../models/account";
+import { AccountModel } from "@/infra/db/models";
 import { mockAccount } from "@/domain/tests/mock-account";
 import connection from "@/infra/db/config/database";
+import { insertOneAccount } from "../../seeds";
 
 type SutTypes = {
   sut: TypeOrmAccountsRepository;
@@ -19,12 +20,15 @@ const makeSut = (): SutTypes => {
 describe("TypeOrmAccountsRepository", () => {
   beforeAll(async () => {
     await connection.create();
+    await getConnection().runMigrations();
   });
   beforeEach(async () => {
     await connection.clear();
   });
+  afterEach(async () => {});
   afterAll(async () => {
     await connection.close();
+    await getConnection().undoLastMigration();
   });
   describe("loadByEmail", () => {
     it("should returns the correct account by a given email", async () => {
@@ -53,6 +57,23 @@ describe("TypeOrmAccountsRepository", () => {
       });
       const result = sut.loadByEmail(faker.internet.email());
       expect(result).rejects.toThrow(new Error());
+    });
+  });
+  describe("updateAccessToken", () => {
+    it.only("should update the account access token", async () => {
+      const { sut, helperRepository } = makeSut();
+      const account = mockAccount();
+      const createdAccount = await insertOneAccount(helperRepository, {
+        ...account,
+        accessToken: faker.random.uuid(),
+      });
+      const accessToken = faker.random.uuid();
+      await sut.updateAccessToken({
+        accountId: createdAccount.id,
+        accessToken,
+      });
+      const updatedAccount = await helperRepository.findOne(createdAccount.id);
+      expect(updatedAccount.accessToken).toBe(accessToken);
     });
   });
 });
