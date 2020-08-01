@@ -26,6 +26,9 @@ export class AccountModel implements Account {
   @OneToMany(() => ExpenseModel, (expense) => expense.account)
   expenses: ExpenseModel[];
 
+  @Column({ name: "access_token" })
+  accessToken: string;
+
   @CreateDateColumn()
   created_at: Date;
 

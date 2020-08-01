@@ -5,7 +5,7 @@ import { mockAccount } from "@/domain/tests/mock-account";
 export const insertOneAccount = async (
   repository: Repository<AccountModel>,
   account = mockAccount()
-): Promise<void> => {
+): Promise<AccountModel> => {
   const created = repository.create(account);
-  await repository.save(created);
+  return await repository.save(created);
 };
