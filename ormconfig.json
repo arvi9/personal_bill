@@ -1,23 +1,14 @@
-[
-  {
-    "name": "default",
-    "type": "sqlite",
-    "database": "database.sqlite",
-    "synchronize": true,
-    "logging": false,
-    "entities": ["./src/infra/db/models/**/*.ts"],
-    "migrations": ["./src/infra/db/migrations/**.ts"],
-    "cli": {
-      "migrationsDir": "./src/infra/db/migrations/"
-    }
-  },
-  {
-    "name": "mongo",
-    "type": "mongodb",
-    "host": "localhost",
-    "port": 27017,
-    "database": "personal_financing",
-    "useUnifiedTopology": true,
-    "entities": ["./src/infra/db/schemas/*.ts"]
+{
+  "name": "default",
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "root",
+  "password": "root",
+  "database": "personal_financing",
+  "entities": ["./src/infra/db/models/**/*.ts"],
+  "migrations": ["./src/infra/db/migrations/**.ts"],
+  "cli": {
+    "migrationsDir": "./src/infra/db/migrations/"
   }
-]
+}
