@@ -5,7 +5,7 @@ export interface AddExpense {
 }
 
 export namespace AddExpense {
-  export type Params = Omit<Expense, "id" | "accountId"> & {
+  export type Params = Omit<Expense, "id" | "account"> & {
     account: {
       id: string;
     };

@@ -1,7 +1,8 @@
 import faker from "faker";
 import { DbAddExpense } from "./db-add-expense";
 import { AddExpenseRepositoryMock } from "@/data/tests";
-import { mockAddExpense } from "@/domain/tests/";
+import { mockAddExpense, mockAccount } from "@/domain/tests/";
+import { AddExpense } from "@/domain/usecases";
 
 type SutTypes = {
   sut: DbAddExpense;
@@ -27,10 +28,10 @@ describe("DbAddExpense", () => {
   it("should returns the created expense", async () => {
     const { sut, addExpenseRepositoryMock } = makeSut();
     const expense = mockAddExpense();
-    const createdExpense = {
+    const createdExpense: AddExpense.Model = {
       ...expense,
       id: faker.random.uuid(),
-      accountId: expense.account.id,
+      account: mockAccount(),
     };
     jest
       .spyOn(addExpenseRepositoryMock, "add")

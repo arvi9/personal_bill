@@ -1,6 +1,6 @@
 import faker from "faker";
 import { AddExpensesController } from "./add-expenses-controller";
-import { mockAddExpense } from "@/domain/tests";
+import { mockAddExpense, mockAccount } from "@/domain/tests";
 import { ValidationSpy } from "@/presentation/test";
 import { badRequest, serverError, created } from "../protocols/http";
 import { AddExpense } from "@/domain/usecases";
@@ -16,10 +16,10 @@ class AddExpenseSpy implements AddExpense {
   params: any;
   expense = {
     id: faker.random.uuid(),
-    accountId: faker.random.uuid(),
     date: faker.date.recent(),
     description: faker.random.words(),
     value: faker.random.number(),
+    account: mockAccount(),
   };
   async add(params: AddExpense.Params): Promise<AddExpense.Model> {
     this.params = params;
