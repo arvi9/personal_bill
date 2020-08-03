@@ -8,8 +8,8 @@ export class JwtTokenAdapter implements GenerateAccessToken, Decrypter {
     return jwt.sign(params, this.secretKey);
   }
 
-  async decrypt(value: string): Promise<string> {
-    jwt.verify(value, this.secretKey);
-    return null;
+  async decrypt(token: string): Promise<string> {
+    const value = jwt.verify(token, this.secretKey) as string;
+    return value;
   }
 }
