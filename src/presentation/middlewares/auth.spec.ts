@@ -1,6 +1,6 @@
 import faker from "faker";
 import { AuthMiddleware } from "./auth";
-import { forbidden } from "@/presentation/protocols/http";
+import { forbidden, HttpRequest } from "@/presentation/protocols/http";
 import { AccessDeniedError } from "@/presentation/errors";
 import { LoadAccountByTokenSpy } from "@/presentation/test";
 
@@ -18,6 +18,12 @@ const makeSut = (): SutTypes => {
   };
 };
 
+const makeFakeRequest = (): HttpRequest => ({
+  headers: {
+    "x-access-token": faker.random.uuid(),
+  },
+});
+
 describe("Auth Middleware", () => {
   it("should return 403 if no x-access-token exists in headers", async () => {
     const { sut } = makeSut();
@@ -26,11 +32,7 @@ describe("Auth Middleware", () => {
   });
   it("should call LoadAccountByToken with correct accessToken", async () => {
     const { sut, loadAccountByTokenSpy } = makeSut();
-    const httpRequest = {
-      headers: {
-        "x-access-token": faker.random.uuid(),
-      },
-    };
+    const httpRequest = makeFakeRequest();
     await sut.handle(httpRequest);
     expect(loadAccountByTokenSpy.accessToken).toBe(
       httpRequest.headers["x-access-token"]

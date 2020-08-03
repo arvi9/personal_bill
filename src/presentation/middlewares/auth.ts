@@ -5,7 +5,7 @@ import {
   HttpResponse,
   forbidden,
 } from "@/presentation/protocols";
-import { AccessDeniedError } from "../errors";
+import { AccessDeniedError } from "@/presentation/errors";
 
 export class AuthMiddleware implements Middleware {
   constructor(private readonly loadAccountByToken: LoadAccountByToken) {}
