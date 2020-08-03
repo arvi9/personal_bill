@@ -14,18 +14,29 @@ const makeParams = () => ({
 });
 
 describe("JwtTokenAdapter", () => {
-  it("should calls jsonwebtoken with correct values", () => {
-    const secretKey = faker.random.uuid();
-    const sut = makeSut(secretKey);
-    const params = makeParams();
-    sut.generate(params);
-    expect(mockedJwt.sign).toHaveBeenCalledWith(params, secretKey);
+  describe("sign", () => {
+    it("should calls jsonwebtoken with correct values", () => {
+      const secretKey = faker.random.uuid();
+      const sut = makeSut(secretKey);
+      const params = makeParams();
+      sut.generate(params);
+      expect(mockedJwt.sign).toHaveBeenCalledWith(params, secretKey);
+    });
+    it("should returns the generated token on success", () => {
+      const token = faker.random.uuid();
+      mockedJwt.sign.mockImplementationOnce(() => token);
+      const sut = makeSut();
+      const result = sut.generate(makeParams());
+      expect(result).toBe(token);
+    });
   });
-  it("should returns the generated token on success", () => {
-    const token = faker.random.uuid();
-    mockedJwt.sign.mockImplementationOnce(() => token);
-    const sut = makeSut();
-    const result = sut.generate(makeParams());
-    expect(result).toBe(token);
+  describe("verify", () => {
+    it("should calls jsonwebtoken.verify with correct values", () => {
+      const secretKey = faker.random.uuid();
+      const sut = makeSut(secretKey);
+      const token = faker.random.uuid();
+      sut.decrypt(token);
+      expect(mockedJwt.verify).toHaveBeenCalledWith(token, secretKey);
+    });
   });
 });
