@@ -37,10 +37,15 @@ describe("DbLoadAccountByToken", () => {
     await sut.load(token);
     expect(loadAccountByTokenRepositorySpy.accessToken).toEqual(token);
   });
-  it("should returns null if loadAccountByTokenRepositorySpy returns null", async () => {
+  it("should returns null if LoadAccountByTokenRepository returns null", async () => {
     const { sut, loadAccountByTokenRepositorySpy } = makeSut();
     loadAccountByTokenRepositorySpy.account = null;
     const result = await sut.load(faker.random.uuid());
     expect(result).toBeNull();
+  });
+  it("should return an account on success", async () => {
+    const { sut, loadAccountByTokenRepositorySpy } = makeSut();
+    const result = await sut.load(faker.random.uuid());
+    expect(result).toEqual(loadAccountByTokenRepositorySpy.account);
   });
 });
