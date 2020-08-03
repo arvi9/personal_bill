@@ -1,5 +1,5 @@
 import { Authenticate } from "@/domain/usecases";
-import { Validation } from "@/presentation/protocols";
+import { Validation, Controller } from "@/presentation/protocols";
 import {
   HttpRequest,
   HttpResponse,
@@ -11,7 +11,7 @@ import {
 import { UnauthorizedError, ServerError } from "@/domain/errors";
 import { RequiredFieldError } from "../errors";
 
-export class AuthenticationController {
+export class AuthenticationController implements Controller {
   constructor(
     private readonly authenticate: Authenticate,
     private readonly validation: Validation

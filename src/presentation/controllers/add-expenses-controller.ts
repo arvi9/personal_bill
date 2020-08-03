@@ -5,11 +5,11 @@ import {
   serverError,
   created,
 } from "@/presentation/protocols/http";
-import { Validation } from "@/presentation/protocols";
+import { Validation, Controller } from "@/presentation/protocols";
 import { AddExpense } from "@/domain/usecases";
 import { ServerError } from "@/domain/errors";
 
-export class AddExpensesController {
+export class AddExpensesController implements Controller {
   constructor(
     private readonly validation: Validation,
     private readonly addExpense: AddExpense
