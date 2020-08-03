@@ -25,7 +25,6 @@ describe("TypeOrmAccountsRepository", () => {
   beforeEach(async () => {
     await connection.clear();
   });
-  afterEach(async () => {});
   afterAll(async () => {
     await connection.close();
     await getConnection().undoLastMigration();
