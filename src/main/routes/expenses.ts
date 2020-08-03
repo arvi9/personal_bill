@@ -4,11 +4,7 @@ import { adaptRouter } from "@/main/adapters";
 
 const expensesRouter = Router();
 expensesRouter.post("/expenses", async (req: Request, res: Response) => {
-  const { statusCode, body } = await adaptRouter(
-    req,
-    makeAddExpensesController()
-  );
-  return res.status(statusCode).json(body);
+  return adaptRouter(req, res, makeAddExpensesController());
 });
 
 export { expensesRouter };

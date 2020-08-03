@@ -6,8 +6,7 @@ const authenticationRouter = Router();
 
 const authenticationController = makeAuthenticationController();
 authenticationRouter.post("/login", async (req: Request, res: Response) => {
-  const { statusCode, body } = await adaptRouter(req, authenticationController);
-  return res.status(statusCode).json(body);
+  return adaptRouter(req, res, authenticationController);
 });
 
 export { authenticationRouter };

@@ -1,13 +1,14 @@
-import { Request } from "express";
+import { Request, Response } from "express";
 import { Controller } from "@/presentation/protocols";
-import { HttpResponse } from "@/presentation/protocols/http";
 
 export const adaptRouter = async (
   request: Request,
+  response: Response,
   controller: Controller
-): Promise<HttpResponse> => {
+): Promise<Response> => {
   const httpRequest = {
     body: request.body,
   };
-  return controller.handle(httpRequest);
+  const { statusCode, body } = await controller.handle(httpRequest);
+  return response.status(statusCode).json(body);
 };
