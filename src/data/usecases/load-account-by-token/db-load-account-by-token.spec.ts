@@ -20,4 +20,10 @@ describe("DbLoadAccountByToken", () => {
     await sut.load(token);
     expect(decrypterSpy.value).toBe(token);
   });
+  it("should returns null if Decrypter returns null", async () => {
+    const { sut, decrypterSpy } = makeSut();
+    decrypterSpy.returnValue = null;
+    const result = await sut.load(faker.random.uuid());
+    expect(result).toBeNull();
+  });
 });
