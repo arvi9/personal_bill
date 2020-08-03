@@ -1,16 +1,21 @@
 import faker from "faker";
 import { DbLoadAccountByToken } from "@/data/usecases";
-import { DecrypterSpy } from "@/data/tests";
+import { DecrypterSpy, AccountsRepositorySpy } from "@/data/tests";
 
 type SutTypes = {
   sut: DbLoadAccountByToken;
   decrypterSpy: DecrypterSpy;
+  loadAccountByTokenRepositorySpy: AccountsRepositorySpy;
 };
 
 const makeSut = (): SutTypes => {
   const decrypterSpy = new DecrypterSpy();
-  const sut = new DbLoadAccountByToken(decrypterSpy);
-  return { sut, decrypterSpy };
+  const loadAccountByTokenRepositorySpy = new AccountsRepositorySpy();
+  const sut = new DbLoadAccountByToken(
+    decrypterSpy,
+    loadAccountByTokenRepositorySpy
+  );
+  return { sut, decrypterSpy, loadAccountByTokenRepositorySpy };
 };
 
 describe("DbLoadAccountByToken", () => {
@@ -25,5 +30,11 @@ describe("DbLoadAccountByToken", () => {
     decrypterSpy.returnValue = null;
     const result = await sut.load(faker.random.uuid());
     expect(result).toBeNull();
+  });
+  it("should calls LoadAccountByTokenRepository with correct values", async () => {
+    const token = faker.random.uuid();
+    const { sut, loadAccountByTokenRepositorySpy } = makeSut();
+    await sut.load(token);
+    expect(loadAccountByTokenRepositorySpy.accessToken).toEqual(token);
   });
 });
