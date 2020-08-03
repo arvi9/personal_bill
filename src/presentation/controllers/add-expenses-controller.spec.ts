@@ -1,14 +1,13 @@
 import faker from "faker";
-import { ExpensesController } from "./expenses-controller";
+import { AddExpensesController } from "./add-expenses-controller";
 import { mockAddExpense } from "@/domain/tests";
 import { ValidationSpy } from "@/presentation/test";
 import { badRequest, serverError, created } from "../protocols/http";
 import { AddExpense } from "@/domain/usecases";
 import { ServerError } from "@/domain/errors";
-import { Expense } from "@/domain/models";
 
 type SutTypes = {
-  sut: ExpensesController;
+  sut: AddExpensesController;
   validationSpy: ValidationSpy;
   addExpenseSpy: AddExpenseSpy;
 };
@@ -31,7 +30,7 @@ class AddExpenseSpy implements AddExpense {
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy();
   const addExpenseSpy = new AddExpenseSpy();
-  const sut = new ExpensesController(validationSpy, addExpenseSpy);
+  const sut = new AddExpensesController(validationSpy, addExpenseSpy);
   return {
     sut,
     validationSpy,
@@ -45,34 +44,34 @@ const makeRequest = () => ({
   },
 });
 
-describe("ExpensesController", () => {
+describe("AddExpensesController", () => {
   it("should calls validation with correct values", async () => {
     const { sut, validationSpy } = makeSut();
     const httpRequest = makeRequest();
-    await sut.store(httpRequest);
+    await sut.handle(httpRequest);
     expect(validationSpy.input).toBe(httpRequest.body);
   });
   it("should returns bad request if validation fails", async () => {
     const { sut, validationSpy } = makeSut();
     validationSpy.validationError = new Error("Validation Error");
-    const httpResponse = await sut.store(makeRequest());
+    const httpResponse = await sut.handle(makeRequest());
     expect(httpResponse).toEqual(badRequest(new Error("Validation Error")));
   });
   it("should calls AddExpense with correct values", async () => {
     const { sut, addExpenseSpy } = makeSut();
     const request = makeRequest();
-    await sut.store(request);
+    await sut.handle(request);
     expect(addExpenseSpy.params).toEqual(request.body);
   });
   it("should returns server error if AddExpense throws", async () => {
     const { sut, addExpenseSpy } = makeSut();
     jest.spyOn(addExpenseSpy, "add").mockRejectedValueOnce(new Error());
-    const response = await sut.store(makeRequest());
+    const response = await sut.handle(makeRequest());
     expect(response).toEqual(serverError(new ServerError()));
   });
   it("should returns created on success", async () => {
     const { sut, addExpenseSpy } = makeSut();
-    const response = await sut.store(makeRequest());
+    const response = await sut.handle(makeRequest());
     expect(response).toEqual(created(addExpenseSpy.expense));
   });
 });
