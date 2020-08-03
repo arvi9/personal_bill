@@ -43,16 +43,15 @@ export class TypeOrmAccountsRepository
   }
 
   async loadByToken(accessToken: string): Promise<LoadAccountByToken.Model> {
-    const {
-      created_at,
-      updated_at,
-      ...account
-    } = await this.repository.findOne({
+    const existingAccount = await this.repository.findOne({
       where: {
         accessToken,
       },
     });
 
+    if (!existingAccount) return null;
+
+    const { updated_at, created_at, ...account } = existingAccount;
     return account;
   }
 }
