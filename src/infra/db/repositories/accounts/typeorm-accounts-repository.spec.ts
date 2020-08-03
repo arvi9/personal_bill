@@ -87,5 +87,12 @@ describe("TypeOrmAccountsRepository", () => {
       const response = await sut.loadByToken(accessToken);
       expect(response).toEqual(account);
     });
+    it("should returns null if loadByToken fails", async () => {
+      const { sut, helperRepository } = makeSut();
+      const account = helperRepository.create(mockAccount());
+      await helperRepository.save(account);
+      const response = await sut.loadByToken(faker.random.uuid());
+      expect(response).toBeNull();
+    });
   });
 });
