@@ -4,9 +4,8 @@ import { adaptRouter } from "@/main/adapters";
 
 const authenticationRouter = Router();
 
-const authenticationController = makeAuthenticationController();
 authenticationRouter.post("/login", async (req: Request, res: Response) => {
-  return adaptRouter(req, res, authenticationController);
+  return adaptRouter(req, res, makeAuthenticationController());
 });
 
 export { authenticationRouter };
