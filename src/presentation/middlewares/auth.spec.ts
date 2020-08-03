@@ -1,6 +1,6 @@
 import faker from "faker";
 import { AuthMiddleware } from "./auth";
-import { forbidden, HttpRequest } from "@/presentation/protocols/http";
+import { forbidden, HttpRequest, success } from "@/presentation/protocols/http";
 import { AccessDeniedError } from "@/presentation/errors";
 import { LoadAccountByTokenSpy } from "@/presentation/test";
 
@@ -43,5 +43,14 @@ describe("Auth Middleware", () => {
     loadAccountByTokenSpy.account = null;
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
+  });
+  it("should returns 200 if LoadAccountByToken returns an account", async () => {
+    const { sut, loadAccountByTokenSpy } = makeSut();
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse).toEqual(
+      success({
+        accountId: loadAccountByTokenSpy.account.id,
+      })
+    );
   });
 });
