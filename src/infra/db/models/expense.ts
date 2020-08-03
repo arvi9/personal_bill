@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  JoinColumn,
 } from "typeorm";
 import { Expense } from "@/domain/models";
 import { AccountModel } from "./account";
@@ -23,10 +24,8 @@ export class ExpenseModel implements Expense {
   @Column()
   description: string;
 
-  @Column({ name: "account_id" })
-  accountId: string;
-
   @ManyToOne(() => AccountModel, (account) => account.expenses)
+  @JoinColumn({ name: "account_id" })
   account: AccountModel;
 
   @CreateDateColumn()

@@ -15,7 +15,7 @@ export class TypeOrmAddExpenseRepository implements AddExpenseRepository {
     const expense = this.repository.create({
       description: params.description,
       date: params.date,
-      accountId: params.account.id,
+      account: params.account,
       value: params.value,
     });
 

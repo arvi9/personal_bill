@@ -1,7 +1,9 @@
+import { Account } from "./account";
+
 export type Expense = {
   id: string;
   value: number;
   date: Date;
   description: string;
-  accountId: string;
+  account: Account;
 };
