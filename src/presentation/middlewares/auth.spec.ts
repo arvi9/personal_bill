@@ -1,6 +1,11 @@
 import faker from "faker";
 import { AuthMiddleware } from "./auth";
-import { forbidden, HttpRequest, success } from "@/presentation/protocols/http";
+import {
+  forbidden,
+  HttpRequest,
+  success,
+  serverError,
+} from "@/presentation/protocols/http";
 import { AccessDeniedError } from "@/presentation/errors";
 import { LoadAccountByTokenSpy } from "@/presentation/test";
 
@@ -52,5 +57,13 @@ describe("Auth Middleware", () => {
         accountId: loadAccountByTokenSpy.account.id,
       })
     );
+  });
+  it("should returns 500 if LoadAccountByToken throws", async () => {
+    const { sut, loadAccountByTokenSpy } = makeSut();
+    jest
+      .spyOn(loadAccountByTokenSpy, "load")
+      .mockRejectedValueOnce(new Error());
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse).toEqual(serverError(new Error()));
   });
 });
