@@ -45,5 +45,13 @@ describe("JwtTokenAdapter", () => {
       const result = await sut.decrypt(faker.random.uuid());
       expect(result).toBe(value);
     });
+    it("should throws if verify throws", () => {
+      mockedJwt.verify.mockImplementationOnce(() => {
+        throw new Error();
+      });
+      const sut = makeSut();
+      const result = sut.decrypt(faker.random.uuid());
+      expect(result).rejects.toThrow(new Error());
+    });
   });
 });
