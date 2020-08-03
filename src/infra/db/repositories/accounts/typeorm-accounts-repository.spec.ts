@@ -44,6 +44,7 @@ describe("TypeOrmAccountsRepository", () => {
         name: faker.name.findName(),
         email: faker.internet.email(),
         password: faker.internet.password(),
+        accessToken: faker.random.uuid(),
       });
       await helperRepository.save(created);
       const response = await sut.loadByEmail(faker.internet.email());
@@ -59,7 +60,7 @@ describe("TypeOrmAccountsRepository", () => {
     });
   });
   describe("updateAccessToken", () => {
-    it.only("should update the account access token", async () => {
+    it("should update the account access token", async () => {
       const { sut, helperRepository } = makeSut();
       const account = mockAccount();
       const createdAccount = await insertOneAccount(helperRepository, {
