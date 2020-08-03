@@ -48,9 +48,17 @@ describe("DbLoadAccountByToken", () => {
     const result = await sut.load(faker.random.uuid());
     expect(result).toEqual(loadAccountByTokenRepositorySpy.account);
   });
-  it("should throws Decrypter throws", () => {
+  it("should throws if Decrypter throws", () => {
     const { sut, decrypterSpy } = makeSut();
     jest.spyOn(decrypterSpy, "decrypt").mockRejectedValueOnce(new Error());
+    const result = sut.load(faker.random.uuid());
+    expect(result).rejects.toThrow(new Error());
+  });
+  it("should throws if LoadAccountByTokenRepository throws", () => {
+    const { sut, loadAccountByTokenRepositorySpy } = makeSut();
+    jest
+      .spyOn(loadAccountByTokenRepositorySpy, "loadByToken")
+      .mockRejectedValueOnce(new Error());
     const result = sut.load(faker.random.uuid());
     expect(result).rejects.toThrow(new Error());
   });
