@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { authenticationRouter } from "./authentication";
-import { expensesRouter } from "./expenses";
+import { authenticationRouter } from "./authentication/authentication";
+import { expensesRouter } from "./expenses/expenses";
 
 const router = Router();
 router.use(authenticationRouter);
