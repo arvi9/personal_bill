@@ -31,12 +31,19 @@ describe("JwtTokenAdapter", () => {
     });
   });
   describe("verify", () => {
-    it("should calls jsonwebtoken.verify with correct values", () => {
+    it("should calls jsonwebtoken.verify with correct values", async () => {
       const secretKey = faker.random.uuid();
       const sut = makeSut(secretKey);
       const token = faker.random.uuid();
-      sut.decrypt(token);
+      await sut.decrypt(token);
       expect(mockedJwt.verify).toHaveBeenCalledWith(token, secretKey);
+    });
+    it("should return a value on verify success", async () => {
+      const value = faker.random.uuid();
+      mockedJwt.verify.mockImplementationOnce(() => value);
+      const sut = makeSut();
+      const result = await sut.decrypt(faker.random.uuid());
+      expect(result).toBe(value);
     });
   });
 });
