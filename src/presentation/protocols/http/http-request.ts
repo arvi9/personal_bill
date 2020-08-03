@@ -1,3 +1,6 @@
 export type HttpRequest = {
-  body: any;
+  body?: any;
+  headers?: {
+    [key: string]: string;
+  };
 };
