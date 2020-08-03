@@ -76,4 +76,16 @@ describe("TypeOrmAccountsRepository", () => {
       expect(updatedAccount.accessToken).toBe(accessToken);
     });
   });
+  describe("loadByToken", () => {
+    it("should returns an account on loadByToken success", async () => {
+      const { sut, helperRepository } = makeSut();
+      const accessToken = faker.random.uuid();
+      const account = mockAccount();
+      account.accessToken = accessToken;
+      const created = helperRepository.create(account);
+      await helperRepository.save(created);
+      const response = await sut.loadByToken(accessToken);
+      expect(response).toEqual(account);
+    });
+  });
 });
