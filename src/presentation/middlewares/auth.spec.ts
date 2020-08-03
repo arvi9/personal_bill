@@ -38,4 +38,10 @@ describe("Auth Middleware", () => {
       httpRequest.headers["x-access-token"]
     );
   });
+  it("should returns 403 if LoadAccountByToken returns falsy", async () => {
+    const { sut, loadAccountByTokenSpy } = makeSut();
+    loadAccountByTokenSpy.account = null;
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
+  });
 });
