@@ -7,7 +7,7 @@ type SutTypes = {
   decrypterSpy: DecrypterSpy;
 };
 
-const makeSut = (token = faker.random.uuid()): SutTypes => {
+const makeSut = (): SutTypes => {
   const decrypterSpy = new DecrypterSpy();
   const sut = new DbLoadAccountByToken(decrypterSpy);
   return { sut, decrypterSpy };
