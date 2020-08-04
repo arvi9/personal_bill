@@ -29,4 +29,10 @@ describe("DbAddBill", () => {
     const result = await sut.add(mockBill());
     expect(result).toBeNull();
   });
+  it("should throws if AddBillRepository throws", () => {
+    const { sut, addBillRepositorySpy } = makeSut();
+    jest.spyOn(addBillRepositorySpy, "add").mockRejectedValueOnce(new Error());
+    const result = sut.add(mockBill());
+    expect(result).rejects.toThrow(new Error());
+  });
 });
