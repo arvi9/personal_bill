@@ -8,6 +8,7 @@
     "test:unit": "yarn test -c jest-unit-config.js --silent",
     "test:integration": "yarn test -c jest-integration-config.js",
     "test:coverage": "yarn test --coverage --silent",
+    "test:coveralls": "yarn test:coverage && coveralls < coverage/lcov.info",
     "dev:server": "npx ts-node-dev -r tsconfig-paths/register ./src/main/index.ts",
     "typeorm": "npx ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
@@ -21,6 +22,7 @@
     "@types/node": "^14.0.27",
     "@types/supertest": "^2.0.10",
     "@types/validator": "^13.1.0",
+    "coveralls": "^3.1.0",
     "dotenv": "^8.2.0",
     "faker": "^4.1.0",
     "git-commit-msg-linter": "^2.4.4",
