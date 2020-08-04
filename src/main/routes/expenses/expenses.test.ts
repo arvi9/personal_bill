@@ -1,5 +1,6 @@
 import request from "supertest";
 import { getConnection, getRepository } from "typeorm";
+import jwt from "jsonwebtoken";
 import app from "@/main/config/app";
 import connection from "@/infra/db/config/database";
 import { mockAddExpense, mockAccount } from "@/domain/tests";
@@ -25,6 +26,22 @@ describe("Expenses Routes", () => {
       addExpense.account = account;
       await insertOneAccount(getRepository(AccountModel), account);
       await request(app).post("/expenses").send(addExpense).expect(403);
+    });
+    it("should returns 201 with valid access token", async () => {
+      const account = mockAccount();
+      const accessToken = jwt.sign(
+        { id: account.id, email: account.email },
+        process.env.JWT_SECRET_KEY
+      );
+      account.accessToken = accessToken;
+      const addExpense = mockAddExpense();
+      addExpense.account = account;
+      await insertOneAccount(getRepository(AccountModel), account);
+      await request(app)
+        .post("/expenses")
+        .set("x-access-token", account.accessToken)
+        .send(addExpense)
+        .expect(201);
     });
   });
 });
