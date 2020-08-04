@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { Account } from "@/domain/models";
-import { ExpenseModel } from "./expense";
+import { ExpenseModel } from "@/infra/db/models";
 
 @Entity("accounts")
 export class AccountModel implements Account {

@@ -7,7 +7,7 @@
     "test": "npx jest --runInBand --passWithNoTests --watchAll",
     "test:unit": "yarn test -c jest-unit-config.js --silent",
     "test:integration": "yarn test -c jest-integration-config.js",
-    "test:coverage": "yarn test --coverage",
+    "test:coverage": "yarn test --coverage --silent",
     "dev:server": "npx ts-node-dev -r tsconfig-paths/register ./src/main/index.ts",
     "typeorm": "npx ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },

@@ -1,6 +1,6 @@
 import faker from "faker";
-import { Account } from "../models";
-import { Authenticate } from "../usecases";
+import { Account } from "@/domain/models";
+import { Authenticate } from "@/domain/usecases";
 
 export const mockAccount = (): Account => ({
   id: faker.random.uuid(),

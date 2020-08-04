@@ -6,7 +6,7 @@ import {
 } from "@/data/tests";
 import { DbAuthenticate } from "./db-authenticate";
 import { Authenticate } from "@/domain/usecases";
-import { UpdateAccessTokenRepositoryMock } from "@/data/tests/db/mock-update-token-repository";
+import { UpdateAccessTokenRepositoryMock } from "@/data/tests";
 
 type SutTypes = {
   sut: DbAuthenticate;
