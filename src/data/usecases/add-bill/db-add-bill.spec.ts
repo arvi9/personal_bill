@@ -35,4 +35,9 @@ describe("DbAddBill", () => {
     const result = sut.add(mockBill());
     expect(result).rejects.toThrow(new Error());
   });
+  it("should returns the created Bill on success", async () => {
+    const { sut, addBillRepositorySpy } = makeSut();
+    const result = await sut.add(mockBill());
+    expect(result).toEqual(addBillRepositorySpy.bill);
+  });
 });
