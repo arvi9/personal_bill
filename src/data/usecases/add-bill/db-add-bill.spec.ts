@@ -23,4 +23,10 @@ describe("DbAddBill", () => {
     await sut.add(bill);
     expect(addBillRepositorySpy.params).toEqual(bill);
   });
+  it("should returns null if AddBillRepository returns null", async () => {
+    const { sut, addBillRepositorySpy } = makeSut();
+    addBillRepositorySpy.bill = null;
+    const result = await sut.add(mockBill());
+    expect(result).toBeNull();
+  });
 });
