@@ -55,4 +55,11 @@ describe("AddBillController", () => {
     await sut.handle(fakeRequest);
     expect(addBillSpy.params).toEqual(fakeRequest.body);
   });
+  it("should returns 500 if AddBill returns null", async () => {
+    const { sut, addBillSpy } = makeSut();
+    addBillSpy.bill = null;
+    const error = new Error("Internal Server Error");
+    const response = await sut.handle(makeFakeRequest());
+    expect(response).toEqual(serverError(error));
+  });
 });
