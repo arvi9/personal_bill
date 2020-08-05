@@ -1,5 +1,10 @@
 import { AddBillController } from "./add-bill-controller";
-import { HttpRequest, badRequest, serverError } from "@/presentation/protocols";
+import {
+  HttpRequest,
+  badRequest,
+  serverError,
+  created,
+} from "@/presentation/protocols";
 import { mockBill } from "@/domain/tests";
 import { ValidationSpy, AddBillSpy } from "@/presentation/test";
 import { RequiredFieldError } from "../errors";
@@ -70,5 +75,10 @@ describe("AddBillController", () => {
     });
     const response = await sut.handle(makeFakeRequest());
     expect(response).toEqual(serverError(error));
+  });
+  it("should created on success", async () => {
+    const { sut, addBillSpy } = makeSut();
+    const response = await sut.handle(makeFakeRequest());
+    expect(response).toEqual(created(addBillSpy.bill));
   });
 });
