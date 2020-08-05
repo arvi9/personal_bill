@@ -27,5 +27,21 @@ describe("Bills Routes", () => {
       await insertOneAccount(getRepository(AccountModel), account);
       await request(app).post("/bills").send(addBill).expect(403);
     });
+    it("should returns 201 on success", async () => {
+      const account = mockAccount();
+      const accessToken = jwt.sign(
+        { id: account.id, email: account.email },
+        process.env.JWT_SECRET_KEY
+      );
+      account.accessToken = accessToken;
+      const addBill = mockBill();
+      addBill.account = account;
+      await insertOneAccount(getRepository(AccountModel), account);
+      await request(app)
+        .post("/bills")
+        .set("x-access-token", accessToken)
+        .send(addBill)
+        .expect(201);
+    });
   });
 });
