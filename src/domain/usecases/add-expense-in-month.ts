@@ -6,7 +6,6 @@ export interface AddExpenseInMonth {
 
 export namespace AddExpenseInMonth {
   export type Params = {
-    value: number;
-    date: Date;
+    expense: Expense;
   };
 }
