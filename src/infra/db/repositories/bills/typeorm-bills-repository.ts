@@ -13,7 +13,11 @@ export class TypeOrmBillsRepository implements AddBillRepository {
     params: AddBillRepository.Params
   ): Promise<AddBillRepository.Model> {
     const bill = this.repository.create(params);
-    await this.repository.save(bill);
-    return null;
+    const {
+      updated_at,
+      created_at,
+      ...createdBill
+    } = await this.repository.save(bill);
+    return createdBill;
   }
 }

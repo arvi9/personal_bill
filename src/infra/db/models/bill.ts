@@ -4,6 +4,8 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Bill, Account } from "@/domain/models";
 import { AccountModel } from ".";
@@ -28,4 +30,10 @@ export class BillModel implements Bill {
 
   @Column({ name: "expiration_date" })
   expirationDate: Date;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }
