@@ -3,6 +3,20 @@ import { HttpRequest } from "@/presentation/protocols";
 import { mockBill } from "@/domain/tests";
 import { ValidationSpy } from "@/presentation/test";
 
+type SutTypes = {
+  sut: AddBillController;
+  validationSpy: ValidationSpy;
+};
+
+const makeSut = (): SutTypes => {
+  const validationSpy = new ValidationSpy();
+  const sut = new AddBillController(validationSpy);
+  return {
+    sut,
+    validationSpy,
+  };
+};
+
 const makeFakeRequest = (): HttpRequest => ({
   body: {
     ...mockBill(),
@@ -11,8 +25,7 @@ const makeFakeRequest = (): HttpRequest => ({
 
 describe("AddBillController", () => {
   it("should calls validation with correct input", async () => {
-    const validationSpy = new ValidationSpy();
-    const sut = new AddBillController(validationSpy);
+    const { sut, validationSpy } = makeSut();
     const fakeRequest = makeFakeRequest();
     await sut.handle(fakeRequest);
     expect(validationSpy.input).toEqual(fakeRequest.body);
