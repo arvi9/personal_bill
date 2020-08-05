@@ -5,6 +5,7 @@ module.exports = {
     "<rootDir>/src/**/*.ts",
     "!<rootDir>/src/main/**",
     "!<rootDir>/src/infra/db/migrations/**",
+    "!<rootDir>/src/**/*index.ts",
   ],
   coverageDirectory: "coverage",
   transform: {
