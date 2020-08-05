@@ -1,20 +1,23 @@
 import { AddBillController } from "./add-bill-controller";
 import { HttpRequest, badRequest, serverError } from "@/presentation/protocols";
 import { mockBill } from "@/domain/tests";
-import { ValidationSpy } from "@/presentation/test";
+import { ValidationSpy, AddBillSpy } from "@/presentation/test";
 import { RequiredFieldError } from "../errors";
 
 type SutTypes = {
   sut: AddBillController;
   validationSpy: ValidationSpy;
+  addBillSpy: AddBillSpy;
 };
 
 const makeSut = (): SutTypes => {
+  const addBillSpy = new AddBillSpy();
   const validationSpy = new ValidationSpy();
-  const sut = new AddBillController(validationSpy);
+  const sut = new AddBillController(validationSpy, addBillSpy);
   return {
     sut,
     validationSpy,
+    addBillSpy,
   };
 };
 
@@ -45,5 +48,11 @@ describe("AddBillController", () => {
     });
     const response = await sut.handle(makeFakeRequest());
     expect(response).toEqual(serverError(error));
+  });
+  it("should calls AddBill with correct values", async () => {
+    const { sut, addBillSpy } = makeSut();
+    const fakeRequest = makeFakeRequest();
+    await sut.handle(fakeRequest);
+    expect(addBillSpy.params).toEqual(fakeRequest.body);
   });
 });
