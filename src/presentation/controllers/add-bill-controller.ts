@@ -5,6 +5,7 @@ import {
   Validation,
   badRequest,
   serverError,
+  created,
 } from "@/presentation/protocols";
 import { AddBill } from "@/domain/usecases";
 import { ServerError } from "@/domain/errors";
@@ -26,7 +27,8 @@ export class AddBillController implements Controller {
       if (!bill) {
         return serverError(new ServerError());
       }
-      return null;
+
+      return created(bill);
     } catch (error) {
       return serverError(error);
     }
