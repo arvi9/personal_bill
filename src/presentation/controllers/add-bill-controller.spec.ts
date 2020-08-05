@@ -62,4 +62,13 @@ describe("AddBillController", () => {
     const response = await sut.handle(makeFakeRequest());
     expect(response).toEqual(serverError(error));
   });
+  it("should returns 500 if AddBill throws", async () => {
+    const { sut, addBillSpy } = makeSut();
+    const error = new Error("Internal Server Error");
+    jest.spyOn(addBillSpy, "add").mockImplementationOnce(() => {
+      throw error;
+    });
+    const response = await sut.handle(makeFakeRequest());
+    expect(response).toEqual(serverError(error));
+  });
 });
