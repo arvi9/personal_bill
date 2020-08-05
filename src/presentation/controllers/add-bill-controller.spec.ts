@@ -1,7 +1,8 @@
 import { AddBillController } from "./add-bill-controller";
-import { HttpRequest } from "@/presentation/protocols";
+import { HttpRequest, badRequest } from "@/presentation/protocols";
 import { mockBill } from "@/domain/tests";
 import { ValidationSpy } from "@/presentation/test";
+import { RequiredFieldError } from "../errors";
 
 type SutTypes = {
   sut: AddBillController;
@@ -29,5 +30,11 @@ describe("AddBillController", () => {
     const fakeRequest = makeFakeRequest();
     await sut.handle(fakeRequest);
     expect(validationSpy.input).toEqual(fakeRequest.body);
+  });
+  it("should returns 400 if validation fails", async () => {
+    const { sut, validationSpy } = makeSut();
+    validationSpy.validationError = new RequiredFieldError("Validation Error");
+    const response = await sut.handle(makeFakeRequest());
+    expect(response).toEqual(badRequest(validationSpy.validationError));
   });
 });
