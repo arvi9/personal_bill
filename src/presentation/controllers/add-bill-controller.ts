@@ -7,6 +7,7 @@ import {
   serverError,
 } from "@/presentation/protocols";
 import { AddBill } from "@/domain/usecases";
+import { ServerError } from "@/domain/errors";
 
 export class AddBillController implements Controller {
   constructor(
@@ -21,7 +22,10 @@ export class AddBillController implements Controller {
         return badRequest(validationError);
       }
 
-      await this.addBill.add(httpRequest.body);
+      const bill = await this.addBill.add(httpRequest.body);
+      if (!bill) {
+        return serverError(new ServerError());
+      }
       return null;
     } catch (error) {
       return serverError(error);
