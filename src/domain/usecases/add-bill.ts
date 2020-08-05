@@ -5,7 +5,7 @@ export interface AddBill {
 }
 
 export namespace AddBill {
-  export type Params = Omit<Bill, "account"> & {
+  export type Params = Omit<Bill, "id" | "account"> & {
     account: {
       id: string;
     };
