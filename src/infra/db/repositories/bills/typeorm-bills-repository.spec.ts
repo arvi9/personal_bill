@@ -43,5 +43,19 @@ describe("TypeOrmBillsRepository", () => {
       const billRepository = getRepository(BillModel);
       expect(await billRepository.count()).toBe(1);
     });
+    it("should returns the created bill on success", async () => {
+      const { sut } = makeSut();
+      const createdAccount = await createAccount();
+      const bill = mockBill();
+      bill.account = createdAccount;
+      const result = await sut.add(bill);
+      expect(result.account).toEqual(createdAccount);
+      expect(result.description).toEqual(bill.description);
+      expect(result.value).toEqual(bill.value);
+      expect(result.expirationDate).toEqual(bill.expirationDate);
+      expect(result.dueDate).toEqual(bill.dueDate);
+      expect(result).not.toHaveProperty("created_at");
+      expect(result).not.toHaveProperty("updated_at");
+    });
   });
 });
