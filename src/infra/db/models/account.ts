@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { Account } from "@/domain/models";
-import { ExpenseModel } from "@/infra/db/models";
+import { ExpenseModel, BillModel } from "@/infra/db/models";
 
 @Entity("accounts")
 export class AccountModel implements Account {
@@ -25,6 +25,9 @@ export class AccountModel implements Account {
 
   @OneToMany(() => ExpenseModel, (expense) => expense.account)
   expenses: ExpenseModel[];
+
+  @OneToMany(() => BillModel, (bill) => bill.account)
+  bills: BillModel[];
 
   @Column({ name: "access_token" })
   accessToken: string;
