@@ -1,5 +1,5 @@
 import { AddBillController } from "./add-bill-controller";
-import { HttpRequest, badRequest } from "@/presentation/protocols";
+import { HttpRequest, badRequest, serverError } from "@/presentation/protocols";
 import { mockBill } from "@/domain/tests";
 import { ValidationSpy } from "@/presentation/test";
 import { RequiredFieldError } from "../errors";
@@ -36,5 +36,14 @@ describe("AddBillController", () => {
     validationSpy.validationError = new RequiredFieldError("Validation Error");
     const response = await sut.handle(makeFakeRequest());
     expect(response).toEqual(badRequest(validationSpy.validationError));
+  });
+  it("should returns 500 if validation throws", async () => {
+    const { sut, validationSpy } = makeSut();
+    const error = new Error("Internal Server Error");
+    jest.spyOn(validationSpy, "validate").mockImplementationOnce(() => {
+      throw error;
+    });
+    const response = await sut.handle(makeFakeRequest());
+    expect(response).toEqual(serverError(error));
   });
 });
