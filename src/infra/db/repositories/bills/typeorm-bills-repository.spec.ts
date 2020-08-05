@@ -15,6 +15,12 @@ const makeSut = (): SutTypes => {
   return { sut };
 };
 
+const createAccount = async (): Promise<AccountModel> => {
+  const accountRepository = getRepository(AccountModel);
+  const account = mockAccount();
+  return insertOneAccount(accountRepository, account);
+};
+
 describe("TypeOrmBillsRepository", () => {
   beforeAll(async () => {
     await connection.create();
@@ -30,9 +36,7 @@ describe("TypeOrmBillsRepository", () => {
   describe("add", () => {
     it("should add a new bill to an account", async () => {
       const { sut } = makeSut();
-      const accountRepository = getRepository(AccountModel);
-      const account = mockAccount();
-      const createdAccount = await insertOneAccount(accountRepository, account);
+      const createdAccount = await createAccount();
       const bill = mockBill();
       bill.account = createdAccount;
       await sut.add(bill);
