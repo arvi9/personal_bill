@@ -2,16 +2,22 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "outDir": "./dist",
+    "outDir": "dist",
     "module": "commonjs",
-    "target": "es2019",
+    "target": "es2017",
+    "lib": ["es2017"],
+    "moduleResolution": "node",
+    "preserveConstEnums": true,
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "allowJs": true,
+    "strict": false,
     "baseUrl": "src",
     "rootDir": "src",
     "paths": {
       "@/*": ["*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

@@ -1,4 +1,5 @@
 import "dotenv/config";
+import "module-alias/register";
 import "reflect-metadata";
 import app from "@/main/config/app";
 import connection from "@/infra/db/config/database";
