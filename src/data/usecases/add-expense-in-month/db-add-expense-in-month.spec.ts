@@ -237,4 +237,47 @@ describe("DbAddExpenseInMonth", () => {
     });
     expect(addSpy).not.toHaveBeenCalled();
   });
+  it("should calls update 1 time and add 2 times if the amount is 3 and loadByDate returns 1", async () => {
+    const { sut, monthlyExpensesRepositorySpy } = makeSut();
+    const account = mockAccount();
+    monthlyExpensesRepositorySpy.monthlyExpenses = [
+      {
+        value: 300,
+        year: 2020,
+        month: 8,
+        account,
+      },
+    ];
+
+    const params = {
+      account: {
+        id: account.id,
+      },
+      amount: 3,
+      date: new Date(2020, 7, 6),
+      value: 100,
+    };
+
+    const addSpy = jest.spyOn(monthlyExpensesRepositorySpy, "add");
+    const updateSpy = jest.spyOn(monthlyExpensesRepositorySpy, "update");
+
+    await sut.add(params);
+
+    expect(updateSpy).toHaveBeenNthCalledWith(1, {
+      value: params.value + 300,
+      account: params.account,
+      month: 8,
+      year: 2020,
+    });
+    expect(addSpy).toHaveBeenNthCalledWith(1, {
+      value: params.value,
+      account: params.account,
+      date: new Date(2020, 8),
+    });
+    expect(addSpy).toHaveBeenNthCalledWith(2, {
+      value: params.value,
+      account: params.account,
+      date: new Date(2020, 9),
+    });
+  });
 });
