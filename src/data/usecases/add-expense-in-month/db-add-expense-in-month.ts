@@ -25,7 +25,23 @@ export class DbAddExpenseInMonth implements AddExpenseInMonth {
     );
 
     if (monthlyExpenses?.length) {
-      await this.updateMonthlyExpenses([...monthlyExpenses], { ...params });
+      for (const monthlyExpense of monthlyExpenses) {
+        await this.monthlyExpensesRepository.update({
+          account: params.account,
+          month: monthlyExpense.month,
+          year: monthlyExpense.year,
+          value: monthlyExpense.value + params.value,
+        });
+      }
+
+      const { month, year } = monthlyExpenses.pop();
+      for (let i = 0; i < params.amount - monthlyExpenses.length; i++) {
+        await this.monthlyExpensesRepository.add({
+          account: params.account,
+          value: params.value,
+          date: addMonths(new Date(year, month), i),
+        });
+      }
       return;
     }
 
