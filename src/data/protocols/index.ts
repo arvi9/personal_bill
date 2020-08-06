@@ -4,6 +4,7 @@ export * from "./db/update-access-token-repository";
 export * from "./db/load-account-by-token-repository";
 export * from "./db/add-bill-repository";
 export * from "./db/add-monthly-expenses-repository";
+export * from "./db/load-monthly-expenses-by-date-repository";
 export * from "./utils/hash-comparer";
 export * from "./utils/generate-access-token";
 export * from "./utils/decrypter";
