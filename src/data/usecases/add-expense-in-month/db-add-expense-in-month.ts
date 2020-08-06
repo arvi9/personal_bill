@@ -19,15 +19,22 @@ export class DbAddExpenseInMonth implements AddExpenseInMonth {
         date: params.date,
       });
     } else {
-      const onlyValues = (expense: MonthlyExpense) => expense.value;
-      const total = (prev: number, curr: number) => prev + curr;
-
-      await this.monthlyExpensesRepository.update({
-        account: params.account,
-        month: monthlyExpenses[0].month,
-        year: monthlyExpenses[0].year,
-        value: monthlyExpenses.map(onlyValues).reduce(total) + params.value,
-      });
+      await this.updateMonthlyExpenses(monthlyExpenses, params);
     }
+  }
+
+  private async updateMonthlyExpenses(
+    monthlyExpenses: MonthlyExpense[],
+    params: AddExpenseInMonth.Params
+  ): Promise<void> {
+    const onlyValues = (expense: MonthlyExpense) => expense.value;
+    const total = (prev: number, curr: number) => prev + curr;
+
+    await this.monthlyExpensesRepository.update({
+      account: params.account,
+      month: monthlyExpenses[0].month,
+      year: monthlyExpenses[0].year,
+      value: monthlyExpenses.map(onlyValues).reduce(total) + params.value,
+    });
   }
 }
