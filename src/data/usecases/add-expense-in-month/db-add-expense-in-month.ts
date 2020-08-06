@@ -1,3 +1,4 @@
+import { addMonths } from "date-fns";
 import { AddExpenseInMonth } from "@/domain/usecases";
 import { MonthlyExpensesRepository } from "@/data/protocols";
 import { MonthlyExpense } from "@/domain/models";
@@ -18,10 +19,13 @@ export class DbAddExpenseInMonth implements AddExpenseInMonth {
       return;
     }
 
-    await this.monthlyExpensesRepository.add({
-      account: params.account,
-      date: params.date,
-    });
+    for (let i = 0; i < params.amount; i++) {
+      await this.monthlyExpensesRepository.add({
+        account: params.account,
+        date: addMonths(params.date, i),
+        value: params.value,
+      });
+    }
   }
 
   private async updateMonthlyExpenses(
