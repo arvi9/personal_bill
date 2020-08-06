@@ -179,4 +179,62 @@ describe("DbAddExpenseInMonth", () => {
       date: new Date(2020, 11),
     });
   });
+  it("should calls update 3 times and not to call add if the amount is 3 and loadByDate returns 3", async () => {
+    const { sut, monthlyExpensesRepositorySpy } = makeSut();
+    const account = mockAccount();
+    monthlyExpensesRepositorySpy.monthlyExpenses = [
+      {
+        value: 300,
+        year: 2020,
+        month: 8,
+        account,
+      },
+      {
+        value: 200,
+        year: 2020,
+        month: 9,
+        account,
+      },
+      {
+        value: 100,
+        year: 2020,
+        month: 10,
+        account,
+      },
+    ];
+
+    const params = {
+      account: {
+        id: account.id,
+      },
+      amount: 3,
+      date: new Date(2020, 7, 6),
+      value: faker.random.number(),
+    };
+
+    const addSpy = jest.spyOn(monthlyExpensesRepositorySpy, "add");
+    const updateSpy = jest.spyOn(monthlyExpensesRepositorySpy, "update");
+
+    await sut.add(params);
+
+    expect(updateSpy).toHaveBeenNthCalledWith(1, {
+      value: params.value + 300,
+      account: params.account,
+      month: 8,
+      year: 2020,
+    });
+    expect(updateSpy).toHaveBeenNthCalledWith(2, {
+      value: params.value + 200,
+      account: params.account,
+      month: 9,
+      year: 2020,
+    });
+    expect(updateSpy).toHaveBeenNthCalledWith(3, {
+      value: params.value + 100,
+      account: params.account,
+      month: 10,
+      year: 2020,
+    });
+    expect(addSpy).not.toHaveBeenCalled();
+  });
 });
