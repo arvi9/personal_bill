@@ -1,23 +1,36 @@
 import faker from "faker";
 import { DbAddExpenseInMonth } from "./db-add-expense-in-month";
-import { AddMonthlyExpensesRepository } from "@/data/protocols";
+import { LoadMonthlyExpensesByDateRepository } from "@/data/protocols";
+import { mockAccount } from "@/domain/tests";
 
-class AddMonthlyExpensesRepositoryMock implements AddMonthlyExpensesRepository {
+class LoadMonthlyExpenseByDateRepositorySpy
+  implements LoadMonthlyExpensesByDateRepository {
   params: any;
-  async add(params: AddMonthlyExpensesRepository.Params): Promise<void> {
+  async loadByDate(
+    params: LoadMonthlyExpensesByDateRepository.Params
+  ): Promise<LoadMonthlyExpensesByDateRepository.Model> {
     this.params = params;
+    return null;
   }
 }
 
 describe("DbAddExpenseInMonth", () => {
-  it("should AddMonthlyExpensesRepository with correct value and date", async () => {
-    const addMonthlyExpensesRepositoryMock = new AddMonthlyExpensesRepositoryMock();
-    const sut = new DbAddExpenseInMonth(addMonthlyExpensesRepositoryMock);
+  it("should calls LoadMonthlyExpensesByDateRepository with correct values", async () => {
+    const account = mockAccount();
+    const loadMonthlyExpenseByDateRepositorySpy = new LoadMonthlyExpenseByDateRepositorySpy();
+    const sut = new DbAddExpenseInMonth(loadMonthlyExpenseByDateRepositorySpy);
     const params = {
-      value: faker.random.number(),
+      account: {
+        id: account.id,
+      },
+      amount: 1,
       date: faker.date.recent(),
+      value: faker.random.number(),
     };
     await sut.add(params);
-    expect(addMonthlyExpensesRepositoryMock.params).toEqual(params);
+    expect(loadMonthlyExpenseByDateRepositorySpy.params).toEqual({
+      date: params.date,
+      account: params.account,
+    });
   });
 });
