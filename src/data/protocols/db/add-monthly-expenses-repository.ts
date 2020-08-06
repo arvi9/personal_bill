@@ -5,5 +5,5 @@ export interface AddMonthlyExpensesRepository {
 }
 
 export namespace AddMonthlyExpensesRepository {
-  export type Params = AddExpenseInMonth.Params;
+  export type Params = Pick<AddExpenseInMonth.Params, "account" | "date">;
 }
