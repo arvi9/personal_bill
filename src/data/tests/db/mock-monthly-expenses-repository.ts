@@ -1,25 +1,18 @@
-import {
-  LoadMonthlyExpensesByDateRepository,
-  AddMonthlyExpensesRepository,
-} from "@/data/protocols";
+import { MonthlyExpensesRepository } from "@/data/protocols";
 import { mockMonthlyExpenses } from "@/domain/tests";
 
-export class LoadMonthlyExpenseByDateRepositorySpy
-  implements LoadMonthlyExpensesByDateRepository {
+export class MonthlyExpensesRepositorySpy implements MonthlyExpensesRepository {
   params: any;
   monthlyExpenses = mockMonthlyExpenses();
+
+  async add(params: MonthlyExpensesRepository.Params): Promise<void> {
+    this.params = params;
+  }
+
   async loadByDate(
-    params: LoadMonthlyExpensesByDateRepository.Params
-  ): Promise<LoadMonthlyExpensesByDateRepository.Model> {
+    params: MonthlyExpensesRepository.Params
+  ): Promise<MonthlyExpensesRepository.Model[]> {
     this.params = params;
     return this.monthlyExpenses;
-  }
-}
-
-export class AddMonthlyExpenseRepositoryMock
-  implements AddMonthlyExpensesRepository {
-  params: any;
-  async add(params: AddMonthlyExpensesRepository.Params): Promise<void> {
-    this.params = params;
   }
 }

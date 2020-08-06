@@ -1,25 +1,19 @@
 import { AddExpenseInMonth } from "@/domain/usecases";
-import {
-  LoadMonthlyExpensesByDateRepository,
-  AddMonthlyExpensesRepository,
-} from "@/data/protocols";
+import { MonthlyExpensesRepository } from "@/data/protocols";
 
 export class DbAddExpenseInMonth implements AddExpenseInMonth {
   constructor(
-    private readonly loadMonthlyExpensesByDateRepository: LoadMonthlyExpensesByDateRepository,
-    private readonly addMonthlyExpenseRepository: AddMonthlyExpensesRepository
+    private readonly monthlyExpensesRepository: MonthlyExpensesRepository
   ) {}
 
   async add(params: AddExpenseInMonth.Params): Promise<void> {
-    const monthlyExpenses = await this.loadMonthlyExpensesByDateRepository.loadByDate(
-      {
-        date: params.date,
-        account: params.account,
-      }
-    );
+    const monthlyExpenses = await this.monthlyExpensesRepository.loadByDate({
+      date: params.date,
+      account: params.account,
+    });
 
     if (!monthlyExpenses.length) {
-      await this.addMonthlyExpenseRepository.add({
+      await this.monthlyExpensesRepository.add({
         account: params.account,
         date: params.date,
       });

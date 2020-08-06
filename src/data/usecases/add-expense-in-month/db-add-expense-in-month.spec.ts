@@ -1,28 +1,19 @@
 import faker from "faker";
 import { DbAddExpenseInMonth } from "./db-add-expense-in-month";
 import { mockAccount } from "@/domain/tests";
-import {
-  LoadMonthlyExpenseByDateRepositorySpy,
-  AddMonthlyExpenseRepositoryMock,
-} from "@/data/tests";
+import { MonthlyExpensesRepositorySpy } from "@/data/tests";
 
 type SutTypes = {
   sut: DbAddExpenseInMonth;
-  loadMonthlyExpenseByDateRepositorySpy: LoadMonthlyExpenseByDateRepositorySpy;
-  addMonthlyExpenseRepositoryMock: AddMonthlyExpenseRepositoryMock;
+  monthlyExpensesRepositorySpy: MonthlyExpensesRepositorySpy;
 };
 
 const makeSut = (): SutTypes => {
-  const loadMonthlyExpenseByDateRepositorySpy = new LoadMonthlyExpenseByDateRepositorySpy();
-  const addMonthlyExpenseRepositoryMock = new AddMonthlyExpenseRepositoryMock();
-  const sut = new DbAddExpenseInMonth(
-    loadMonthlyExpenseByDateRepositorySpy,
-    addMonthlyExpenseRepositoryMock
-  );
+  const monthlyExpensesRepositorySpy = new MonthlyExpensesRepositorySpy();
+  const sut = new DbAddExpenseInMonth(monthlyExpensesRepositorySpy);
   return {
     sut,
-    loadMonthlyExpenseByDateRepositorySpy,
-    addMonthlyExpenseRepositoryMock,
+    monthlyExpensesRepositorySpy,
   };
 };
 
@@ -36,26 +27,22 @@ const makeFakeParams = (account = mockAccount(), amount = 1) => ({
 });
 
 describe("DbAddExpenseInMonth", () => {
-  it("should calls LoadMonthlyExpensesByDateRepository with correct values", async () => {
+  it("should calls MonthlyExpensesRepository.loadByDate with correct values", async () => {
     const account = mockAccount();
-    const { sut, loadMonthlyExpenseByDateRepositorySpy } = makeSut();
+    const { sut, monthlyExpensesRepositorySpy } = makeSut();
     const params = makeFakeParams(account);
     await sut.add(params);
-    expect(loadMonthlyExpenseByDateRepositorySpy.params).toEqual({
+    expect(monthlyExpensesRepositorySpy.params).toEqual({
       date: params.date,
       account: params.account,
     });
   });
-  it("should calls AddMonthlyExpenseRepository if LoadMonthlyExpensesByDateRepository returns empty", async () => {
-    const {
-      sut,
-      loadMonthlyExpenseByDateRepositorySpy,
-      addMonthlyExpenseRepositoryMock,
-    } = makeSut();
-    loadMonthlyExpenseByDateRepositorySpy.monthlyExpenses = [];
+  it("should calls MonthlyExpensesRepository.add if MonthlyExpensesRepository.loadByDate returns empty", async () => {
+    const { sut, monthlyExpensesRepositorySpy } = makeSut();
+    monthlyExpensesRepositorySpy.monthlyExpenses = [];
     const params = makeFakeParams();
     await sut.add(params);
-    expect(addMonthlyExpenseRepositoryMock.params).toEqual({
+    expect(monthlyExpensesRepositorySpy.params).toEqual({
       date: params.date,
       account: params.account,
     });
