@@ -25,28 +25,20 @@ export class DbAddExpenseInMonth implements AddExpenseInMonth {
     );
 
     if (monthlyExpenses?.length) {
-      for (const monthlyExpense of monthlyExpenses) {
-        await this.monthlyExpensesRepository.update({
-          account: params.account,
-          month: monthlyExpense.month,
-          year: monthlyExpense.year,
-          value: monthlyExpense.value + params.value,
-        });
-      }
+      await this.updateMonthlyExpenses(monthlyExpenses, params);
 
       if (params.amount > monthlyExpenses.length) {
-        const { month, year } = monthlyExpenses.pop();
-        for (let i = 0; i < params.amount - monthlyExpenses.length; i++) {
-          await this.monthlyExpensesRepository.add({
-            account: params.account,
-            value: params.value,
-            date: addMonths(new Date(year, month), i),
-          });
-        }
+        await this.addRestMonthlyExpenses(monthlyExpenses, params);
       }
       return;
     }
 
+    await this.addMonthlyExpenses(params);
+  }
+
+  private async addMonthlyExpenses(
+    params: AddExpenseInMonth.Params
+  ): Promise<void> {
     for (let i = 0; i < params.amount; i++) {
       await this.monthlyExpensesRepository.add({
         account: params.account,
@@ -56,18 +48,38 @@ export class DbAddExpenseInMonth implements AddExpenseInMonth {
     }
   }
 
-  private async updateMonthlyExpenses(
+  private async addRestMonthlyExpenses(
     monthlyExpenses: MonthlyExpense[],
     params: AddExpenseInMonth.Params
   ): Promise<void> {
-    const onlyValues = (expense: MonthlyExpense) => expense.value;
-    const total = (prev: number, curr: number) => prev + curr;
+    const { month, year } = monthlyExpenses.pop();
+    for (let i = 0; i < params.amount - monthlyExpenses.length; i++) {
+      await this.monthlyExpensesRepository.add({
+        account: params.account,
+        value: params.value,
+        date: addMonths(new Date(year, month), i),
+      });
+    }
+  }
 
+  private async updateMonthlyExpenses(
+    monthlyExpenses: MonthlyExpense[],
+    params: AddExpenseInMonth.Params
+  ) {
+    for (const monthlyExpense of monthlyExpenses) {
+      await this.updateMonthlyExpense(monthlyExpense, params);
+    }
+  }
+
+  private async updateMonthlyExpense(
+    monthlyExpense: MonthlyExpense,
+    params: AddExpenseInMonth.Params
+  ): Promise<void> {
     await this.monthlyExpensesRepository.update({
       account: params.account,
-      month: monthlyExpenses[0].month,
-      year: monthlyExpenses[0].year,
-      value: monthlyExpenses.map(onlyValues).reduce(total) + params.value,
+      month: monthlyExpense.month,
+      year: monthlyExpense.year,
+      value: monthlyExpense.value + params.value,
     });
   }
 }
