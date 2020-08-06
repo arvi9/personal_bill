@@ -47,6 +47,16 @@ describe("DbAddExpenseInMonth", () => {
       account: params.account,
     });
   });
+  it("should calls add if loadByDate if returns null", async () => {
+    const { sut, monthlyExpensesRepositorySpy } = makeSut();
+    monthlyExpensesRepositorySpy.monthlyExpenses = null;
+    const params = makeFakeParams();
+    await sut.add(params);
+    expect(monthlyExpensesRepositorySpy.addParams).toEqual({
+      date: params.date,
+      account: params.account,
+    });
+  });
   it("should calls update if loadByDate return expenses", async () => {
     const { sut, monthlyExpensesRepositorySpy } = makeSut();
     const account = mockAccount();
