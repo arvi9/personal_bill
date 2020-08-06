@@ -1,18 +1,7 @@
 import faker from "faker";
 import { DbAddExpenseInMonth } from "./db-add-expense-in-month";
-import { LoadMonthlyExpensesByDateRepository } from "@/data/protocols";
 import { mockAccount } from "@/domain/tests";
-
-class LoadMonthlyExpenseByDateRepositorySpy
-  implements LoadMonthlyExpensesByDateRepository {
-  params: any;
-  async loadByDate(
-    params: LoadMonthlyExpensesByDateRepository.Params
-  ): Promise<LoadMonthlyExpensesByDateRepository.Model> {
-    this.params = params;
-    return null;
-  }
-}
+import { LoadMonthlyExpenseByDateRepositorySpy } from "@/data/tests";
 
 describe("DbAddExpenseInMonth", () => {
   it("should calls LoadMonthlyExpensesByDateRepository with correct values", async () => {
