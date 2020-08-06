@@ -27,13 +27,31 @@ const makeFakeParams = (account = mockAccount(), amount = 1) => ({
 });
 
 describe("DbAddExpenseInMonth", () => {
-  it("should calls loadByDate with correct values", async () => {
+  it("should calls loadByDate with correct values if amount is 1", async () => {
     const account = mockAccount();
     const { sut, monthlyExpensesRepositorySpy } = makeSut();
     const params = makeFakeParams(account);
     await sut.add(params);
     expect(monthlyExpensesRepositorySpy.loadByDateParams).toEqual({
       date: params.date,
+      account: params.account,
+    });
+  });
+  it("should calls loadByDate with correct values if amount is greater than  1", async () => {
+    const { sut, monthlyExpensesRepositorySpy } = makeSut();
+    const account = mockAccount();
+    const params = {
+      account: {
+        id: account.id,
+      },
+      amount: 4,
+      date: new Date(2020, 7, 6),
+      value: faker.random.number(),
+    };
+    await sut.add(params);
+    expect(monthlyExpensesRepositorySpy.loadByDateParams).toEqual({
+      date: params.date,
+      finalDate: new Date(2020, 10, 6),
       account: params.account,
     });
   });
