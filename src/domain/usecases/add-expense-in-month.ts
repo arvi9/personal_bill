@@ -7,5 +7,8 @@ export namespace AddExpenseInMonth {
     value: number;
     date: Date;
     amount: number;
+    account: {
+      id: string;
+    };
   };
 }
