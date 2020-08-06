@@ -45,6 +45,7 @@ describe("DbAddExpenseInMonth", () => {
     expect(monthlyExpensesRepositorySpy.addParams).toEqual({
       date: params.date,
       account: params.account,
+      value: params.value,
     });
   });
   it("should calls add if loadByDate if returns null", async () => {
@@ -55,6 +56,7 @@ describe("DbAddExpenseInMonth", () => {
     expect(monthlyExpensesRepositorySpy.addParams).toEqual({
       date: params.date,
       account: params.account,
+      value: params.value,
     });
   });
   it("should calls update if loadByDate return expenses", async () => {
@@ -75,6 +77,41 @@ describe("DbAddExpenseInMonth", () => {
         id: account.id,
       },
       value: expensesValue + params.value,
+    });
+  });
+  it("should calls amount times add if amount is greater than 1 and loadByDate returns empty", async () => {
+    const { sut, monthlyExpensesRepositorySpy } = makeSut();
+    monthlyExpensesRepositorySpy.monthlyExpenses = [];
+    const addSpy = jest.spyOn(monthlyExpensesRepositorySpy, "add");
+    const account = mockAccount();
+    const params = {
+      account: {
+        id: account.id,
+      },
+      amount: 4,
+      date: new Date(2020, 7, 6),
+      value: faker.random.number(),
+    };
+    await sut.add(params);
+    expect(addSpy).toHaveBeenNthCalledWith(1, {
+      value: params.value,
+      account: params.account,
+      date: params.date,
+    });
+    expect(addSpy).toHaveBeenNthCalledWith(2, {
+      value: params.value,
+      account: params.account,
+      date: new Date(2020, 8, 6),
+    });
+    expect(addSpy).toHaveBeenNthCalledWith(3, {
+      value: params.value,
+      account: params.account,
+      date: new Date(2020, 9, 6),
+    });
+    expect(addSpy).toHaveBeenNthCalledWith(4, {
+      value: params.value,
+      account: params.account,
+      date: new Date(2020, 10, 6),
     });
   });
 });
