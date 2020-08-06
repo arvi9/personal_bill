@@ -9,10 +9,20 @@ export class DbAddExpenseInMonth implements AddExpenseInMonth {
   ) {}
 
   async add(params: AddExpenseInMonth.Params): Promise<void> {
-    const monthlyExpenses = await this.monthlyExpensesRepository.loadByDate({
+    const loadByDateParams = {
       date: params.date,
       account: params.account,
-    });
+    };
+
+    if (params.amount > 1) {
+      Object.assign(loadByDateParams, {
+        finalDate: addMonths(params.date, params.amount - 1),
+      });
+    }
+
+    const monthlyExpenses = await this.monthlyExpensesRepository.loadByDate(
+      loadByDateParams
+    );
 
     if (monthlyExpenses?.length) {
       await this.updateMonthlyExpenses([...monthlyExpenses], { ...params });
