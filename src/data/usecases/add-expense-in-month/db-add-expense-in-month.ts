@@ -34,13 +34,15 @@ export class DbAddExpenseInMonth implements AddExpenseInMonth {
         });
       }
 
-      const { month, year } = monthlyExpenses.pop();
-      for (let i = 0; i < params.amount - monthlyExpenses.length; i++) {
-        await this.monthlyExpensesRepository.add({
-          account: params.account,
-          value: params.value,
-          date: addMonths(new Date(year, month), i),
-        });
+      if (params.amount > monthlyExpenses.length) {
+        const { month, year } = monthlyExpenses.pop();
+        for (let i = 0; i < params.amount - monthlyExpenses.length; i++) {
+          await this.monthlyExpensesRepository.add({
+            account: params.account,
+            value: params.value,
+            date: addMonths(new Date(year, month), i),
+          });
+        }
       }
       return;
     }
