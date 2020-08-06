@@ -1,5 +1,6 @@
 import { AddExpenseInMonth } from "@/domain/usecases";
 import { MonthlyExpensesRepository } from "@/data/protocols";
+import { MonthlyExpense } from "@/domain/models";
 
 export class DbAddExpenseInMonth implements AddExpenseInMonth {
   constructor(
@@ -16,6 +17,16 @@ export class DbAddExpenseInMonth implements AddExpenseInMonth {
       await this.monthlyExpensesRepository.add({
         account: params.account,
         date: params.date,
+      });
+    } else {
+      const onlyValues = (expense: MonthlyExpense) => expense.value;
+      const total = (prev: number, curr: number) => prev + curr;
+
+      await this.monthlyExpensesRepository.update({
+        account: params.account,
+        month: monthlyExpenses[0].month,
+        year: monthlyExpenses[0].year,
+        value: monthlyExpenses.map(onlyValues).reduce(total) + params.value,
       });
     }
   }
