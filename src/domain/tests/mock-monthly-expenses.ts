@@ -2,11 +2,13 @@ import faker from "faker";
 import { MonthlyExpense } from "@/domain/models";
 import { mockAccount } from "./mock-account";
 
-export const mockMonthlyExpense = (): MonthlyExpense => ({
+export const mockMonthlyExpense = (
+  account = mockAccount()
+): MonthlyExpense => ({
   value: faker.random.number(),
-  year: faker.random.number(2020),
-  month: faker.random.number(31),
-  account: mockAccount(),
+  year: 2020,
+  month: 6,
+  account,
 });
 
 export const mockMonthlyExpenses = (): MonthlyExpense[] => [
