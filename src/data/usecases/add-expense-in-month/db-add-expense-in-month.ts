@@ -13,14 +13,15 @@ export class DbAddExpenseInMonth implements AddExpenseInMonth {
       account: params.account,
     });
 
-    if (!monthlyExpenses?.length) {
-      await this.monthlyExpensesRepository.add({
-        account: params.account,
-        date: params.date,
-      });
-    } else {
-      await this.updateMonthlyExpenses(monthlyExpenses, params);
+    if (monthlyExpenses?.length) {
+      await this.updateMonthlyExpenses([...monthlyExpenses], { ...params });
+      return;
     }
+
+    await this.monthlyExpensesRepository.add({
+      account: params.account,
+      date: params.date,
+    });
   }
 
   private async updateMonthlyExpenses(
