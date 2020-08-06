@@ -6,5 +6,6 @@ export namespace AddExpenseInMonth {
   export type Params = {
     value: number;
     date: Date;
+    amount: number;
   };
 }
