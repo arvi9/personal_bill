@@ -1,4 +1,4 @@
-import { AddExpenseInMonth } from "@/domain/usecases";
+import { UpdateMonthlyExpenses } from "@/domain/usecases";
 import { MonthlyExpense } from "@/domain/models";
 
 export interface MonthlyExpensesRepository {
@@ -11,7 +11,7 @@ export interface MonthlyExpensesRepository {
 
 export namespace MonthlyExpensesRepository {
   export type Params = Pick<
-    AddExpenseInMonth.Params,
+    UpdateMonthlyExpenses.Params,
     "account" | "date" | "value"
   >;
   export type LoadByDateParams = Omit<
