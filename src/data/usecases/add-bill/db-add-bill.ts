@@ -10,7 +10,7 @@ export class DbAddBill extends ExpensePublisher implements AddBill {
 
   constructor(
     private readonly addBillRepository: AddBillRepository,
-    protected readonly expensesListeners: ExpenseListener[]
+    protected expensesListeners: ExpenseListener[]
   ) {
     super(expensesListeners);
   }
