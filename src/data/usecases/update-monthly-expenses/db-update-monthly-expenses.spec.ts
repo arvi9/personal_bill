@@ -121,18 +121,21 @@ describe("UpdateMonthlyExpenses", () => {
         year: 2020,
         month: 8,
         account,
+        id: faker.random.uuid(),
       },
       {
         value: 200,
         year: 2020,
         month: 9,
         account,
+        id: faker.random.uuid(),
       },
       {
         value: 100,
         year: 2020,
         month: 10,
         account,
+        id: faker.random.uuid(),
       },
     ];
 
@@ -188,18 +191,22 @@ describe("UpdateMonthlyExpenses", () => {
         year: 2020,
         month: 8,
         account,
+        id: faker.random.uuid(),
       },
       {
         value: 200,
         year: 2020,
         month: 9,
         account,
+
+        id: faker.random.uuid(),
       },
       {
         value: 100,
         year: 2020,
         month: 10,
         account,
+        id: faker.random.uuid(),
       },
     ];
 
@@ -246,6 +253,7 @@ describe("UpdateMonthlyExpenses", () => {
         year: 2020,
         month: 8,
         account,
+        id: faker.random.uuid(),
       },
     ];
 

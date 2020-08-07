@@ -8,6 +8,13 @@ export class CreateMonthlyExpensesTable1596764424628
         name: "monthly_expenses",
         columns: [
           {
+            name: "id",
+            type: "varchar",
+            length: "36",
+            generationStrategy: "uuid",
+            isPrimary: true,
+          },
+          {
             name: "account_id",
             type: "varchar",
             length: "36",

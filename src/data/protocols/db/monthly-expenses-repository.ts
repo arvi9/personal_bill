@@ -23,5 +23,5 @@ export namespace MonthlyExpensesRepository {
       id: string;
     };
   };
-  export type Model = MonthlyExpense;
+  export type Model = Omit<MonthlyExpense, "id">;
 }

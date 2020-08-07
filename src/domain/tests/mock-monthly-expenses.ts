@@ -5,6 +5,7 @@ import { mockAccount } from "./mock-account";
 export const mockMonthlyExpense = (
   account = mockAccount()
 ): MonthlyExpense => ({
+  id: faker.random.uuid(),
   value: faker.random.number(),
   year: 2020,
   month: 6,
