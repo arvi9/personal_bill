@@ -1,14 +1,14 @@
 import { addMonths } from "date-fns";
-import { AddExpenseInMonth } from "@/domain/usecases";
+import { UpdateMonthlyExpenses } from "@/domain/usecases";
 import { MonthlyExpensesRepository } from "@/data/protocols";
 import { MonthlyExpense } from "@/domain/models";
 
-export class DbAddExpenseInMonth implements AddExpenseInMonth {
+export class DbAddExpenseInMonth implements UpdateMonthlyExpenses {
   constructor(
     private readonly monthlyExpensesRepository: MonthlyExpensesRepository
   ) {}
 
-  async add(params: AddExpenseInMonth.Params): Promise<void> {
+  async update(params: UpdateMonthlyExpenses.Params): Promise<void> {
     const loadByDateParams = {
       date: params.date,
       account: params.account,

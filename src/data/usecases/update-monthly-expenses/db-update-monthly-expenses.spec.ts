@@ -1,5 +1,5 @@
 import faker from "faker";
-import { DbAddExpenseInMonth } from "./db-add-expense-in-month";
+import { DbAddExpenseInMonth } from "./db-update-monthly-expenses";
 import { mockAccount } from "@/domain/tests";
 import { MonthlyExpensesRepositorySpy } from "@/data/tests";
 
@@ -26,7 +26,7 @@ const makeFakeParams = (account = mockAccount(), amount = 1) => ({
   value: faker.random.number(),
 });
 
-describe("DbAddExpenseInMonth", () => {
+describe("UpdateMonthlyExpenses", () => {
   it("should calls loadByDate with correct values if amount is 1", async () => {
     const account = mockAccount();
     const { sut, monthlyExpensesRepositorySpy } = makeSut();
