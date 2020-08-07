@@ -1,16 +1,12 @@
-import { AddExpense } from "@/domain/usecases";
-import {
-  AddExpenseRepository,
-  ExpensePublisher,
-  ExpenseListener,
-} from "@/data/protocols";
+import { AddExpense, UpdateMonthlyExpenses } from "@/domain/usecases";
+import { AddExpenseRepository, ExpensePublisher } from "@/data/protocols";
 
 export class DbAddExpense extends ExpensePublisher implements AddExpense {
   private expense: AddExpense.Model;
 
   constructor(
     private readonly addExpenseRepository: AddExpenseRepository,
-    protected expensesListeners: ExpenseListener[]
+    protected expensesListeners: UpdateMonthlyExpenses[]
   ) {
     super(expensesListeners);
   }

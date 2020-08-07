@@ -1,8 +1,8 @@
-import { ExpenseListener } from "@/data/protocols";
+import { UpdateMonthlyExpenses } from "@/domain/usecases";
 
-export class ExpenseListenerMock implements ExpenseListener {
+export class ExpenseListenerMock implements UpdateMonthlyExpenses {
   params: any;
-  async update(params: ExpenseListener.Params): Promise<void> {
+  async update(params: UpdateMonthlyExpenses.Params): Promise<void> {
     this.params = params;
   }
 }

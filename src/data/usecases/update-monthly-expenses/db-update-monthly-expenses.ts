@@ -3,7 +3,7 @@ import { UpdateMonthlyExpenses } from "@/domain/usecases";
 import { MonthlyExpensesRepository } from "@/data/protocols";
 import { MonthlyExpense } from "@/domain/models";
 
-export class DbAddExpenseInMonth implements UpdateMonthlyExpenses {
+export class DbUpdateMonthlyExpenses implements UpdateMonthlyExpenses {
   constructor(
     private readonly monthlyExpensesRepository: MonthlyExpensesRepository
   ) {}
@@ -37,7 +37,7 @@ export class DbAddExpenseInMonth implements UpdateMonthlyExpenses {
   }
 
   private async addMonthlyExpenses(
-    params: AddExpenseInMonth.Params
+    params: UpdateMonthlyExpenses.Params
   ): Promise<void> {
     for (let i = 0; i < params.amount; i++) {
       await this.monthlyExpensesRepository.add({
@@ -50,7 +50,7 @@ export class DbAddExpenseInMonth implements UpdateMonthlyExpenses {
 
   private async addRestMonthlyExpenses(
     monthlyExpenses: MonthlyExpense[],
-    params: AddExpenseInMonth.Params
+    params: UpdateMonthlyExpenses.Params
   ): Promise<void> {
     const { month, year } = monthlyExpenses.pop();
     for (let i = 0; i < params.amount - monthlyExpenses.length; i++) {
@@ -64,7 +64,7 @@ export class DbAddExpenseInMonth implements UpdateMonthlyExpenses {
 
   private async updateMonthlyExpenses(
     monthlyExpenses: MonthlyExpense[],
-    params: AddExpenseInMonth.Params
+    params: UpdateMonthlyExpenses.Params
   ) {
     for (const monthlyExpense of monthlyExpenses) {
       await this.updateMonthlyExpense(monthlyExpense, params);
@@ -73,7 +73,7 @@ export class DbAddExpenseInMonth implements UpdateMonthlyExpenses {
 
   private async updateMonthlyExpense(
     monthlyExpense: MonthlyExpense,
-    params: AddExpenseInMonth.Params
+    params: UpdateMonthlyExpenses.Params
   ): Promise<void> {
     await this.monthlyExpensesRepository.update({
       account: params.account,

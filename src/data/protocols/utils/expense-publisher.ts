@@ -1,17 +1,17 @@
-import { ExpenseListener } from "./expense-listener";
+import { UpdateMonthlyExpenses } from "@/domain/usecases";
 
 export abstract class ExpensePublisher {
-  protected expensesListeners: ExpenseListener[];
+  protected expensesListeners: UpdateMonthlyExpenses[];
 
-  constructor(expensesListeners: ExpenseListener[]) {
+  constructor(expensesListeners: UpdateMonthlyExpenses[]) {
     this.expensesListeners = expensesListeners;
   }
 
-  addListener(expenseListener: ExpenseListener): void {
+  addListener(expenseListener: UpdateMonthlyExpenses): void {
     this.expensesListeners.push(expenseListener);
   }
 
-  removeListener(expenseListener: ExpenseListener): void {
+  removeListener(expenseListener: UpdateMonthlyExpenses): void {
     this.expensesListeners.slice(
       this.expensesListeners.indexOf(expenseListener),
       1

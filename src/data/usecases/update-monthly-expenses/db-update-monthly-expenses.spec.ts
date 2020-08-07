@@ -1,16 +1,16 @@
 import faker from "faker";
-import { DbAddExpenseInMonth } from "./db-update-monthly-expenses";
+import { DbUpdateMonthlyExpenses } from "./db-update-monthly-expenses";
 import { mockAccount } from "@/domain/tests";
 import { MonthlyExpensesRepositorySpy } from "@/data/tests";
 
 type SutTypes = {
-  sut: DbAddExpenseInMonth;
+  sut: DbUpdateMonthlyExpenses;
   monthlyExpensesRepositorySpy: MonthlyExpensesRepositorySpy;
 };
 
 const makeSut = (): SutTypes => {
   const monthlyExpensesRepositorySpy = new MonthlyExpensesRepositorySpy();
-  const sut = new DbAddExpenseInMonth(monthlyExpensesRepositorySpy);
+  const sut = new DbUpdateMonthlyExpenses(monthlyExpensesRepositorySpy);
   return {
     sut,
     monthlyExpensesRepositorySpy,
@@ -31,7 +31,7 @@ describe("UpdateMonthlyExpenses", () => {
     const account = mockAccount();
     const { sut, monthlyExpensesRepositorySpy } = makeSut();
     const params = makeFakeParams(account);
-    await sut.add(params);
+    await sut.update(params);
     expect(monthlyExpensesRepositorySpy.loadByDateParams).toEqual({
       date: params.date,
       account: params.account,
@@ -48,7 +48,7 @@ describe("UpdateMonthlyExpenses", () => {
       date: new Date(2020, 7, 6),
       value: faker.random.number(),
     };
-    await sut.add(params);
+    await sut.update(params);
     expect(monthlyExpensesRepositorySpy.loadByDateParams).toEqual({
       date: params.date,
       finalDate: new Date(2020, 10, 6),
@@ -59,7 +59,7 @@ describe("UpdateMonthlyExpenses", () => {
     const { sut, monthlyExpensesRepositorySpy } = makeSut();
     monthlyExpensesRepositorySpy.monthlyExpenses = [];
     const params = makeFakeParams();
-    await sut.add(params);
+    await sut.update(params);
     expect(monthlyExpensesRepositorySpy.addParams).toEqual({
       date: params.date,
       account: params.account,
@@ -70,7 +70,7 @@ describe("UpdateMonthlyExpenses", () => {
     const { sut, monthlyExpensesRepositorySpy } = makeSut();
     monthlyExpensesRepositorySpy.monthlyExpenses = null;
     const params = makeFakeParams();
-    await sut.add(params);
+    await sut.update(params);
     expect(monthlyExpensesRepositorySpy.addParams).toEqual({
       date: params.date,
       account: params.account,
@@ -90,7 +90,7 @@ describe("UpdateMonthlyExpenses", () => {
       date: new Date(2020, 7, 6),
       value: faker.random.number(),
     };
-    await sut.add(params);
+    await sut.update(params);
     expect(addSpy).toHaveBeenNthCalledWith(1, {
       value: params.value,
       account: params.account,
@@ -148,7 +148,7 @@ describe("UpdateMonthlyExpenses", () => {
     const addSpy = jest.spyOn(monthlyExpensesRepositorySpy, "add");
     const updateSpy = jest.spyOn(monthlyExpensesRepositorySpy, "update");
 
-    await sut.add(params);
+    await sut.update(params);
 
     expect(updateSpy).toHaveBeenNthCalledWith(1, {
       value: params.value + 300,
@@ -215,7 +215,7 @@ describe("UpdateMonthlyExpenses", () => {
     const addSpy = jest.spyOn(monthlyExpensesRepositorySpy, "add");
     const updateSpy = jest.spyOn(monthlyExpensesRepositorySpy, "update");
 
-    await sut.add(params);
+    await sut.update(params);
 
     expect(updateSpy).toHaveBeenNthCalledWith(1, {
       value: params.value + 300,
@@ -261,7 +261,7 @@ describe("UpdateMonthlyExpenses", () => {
     const addSpy = jest.spyOn(monthlyExpensesRepositorySpy, "add");
     const updateSpy = jest.spyOn(monthlyExpensesRepositorySpy, "update");
 
-    await sut.add(params);
+    await sut.update(params);
 
     expect(updateSpy).toHaveBeenNthCalledWith(1, {
       value: params.value + 300,
