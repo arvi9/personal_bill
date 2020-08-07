@@ -1,9 +1,12 @@
 import { getConnection, getRepository } from "typeorm";
 import connection from "@/infra/db/config/database";
 import { TypeOrmMonthlyExpensesRepository } from "./typeorm-monthly-expenses-repository";
-import { insertOneAccount } from "../../seeds";
-import { AccountModel, MonthlyExpensesModel } from "../../models";
+import { insertOneAccount } from "@/infra/db/seeds";
+import { AccountModel, MonthlyExpensesModel } from "@/infra/db/models";
 import { mockAccount, mockMonthlyExpense } from "@/domain/tests";
+
+const makeSut = (): TypeOrmMonthlyExpensesRepository =>
+  new TypeOrmMonthlyExpensesRepository();
 
 describe("TypeOrmMonthlyExpensesRepository", () => {
   beforeAll(async () => {
@@ -19,7 +22,7 @@ describe("TypeOrmMonthlyExpensesRepository", () => {
   });
   describe("loadByDate", () => {
     it("should returns the monthly expenses for a given date", async () => {
-      const sut = new TypeOrmMonthlyExpensesRepository();
+      const sut = makeSut();
       const account = mockAccount();
       await insertOneAccount(getRepository(AccountModel), account);
 
