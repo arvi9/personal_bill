@@ -1,7 +1,6 @@
 import { DbAddBill } from "./db-add-bill";
 import { mockBill } from "@/domain/tests";
-import { AddBillRepositorySpy } from "@/data/tests";
-import { ExpenseListener } from "@/data/protocols";
+import { AddBillRepositorySpy, ExpenseListenerMock } from "@/data/tests";
 
 type SutTypes = {
   sut: DbAddBill;
@@ -22,13 +21,6 @@ const makeSut = (): SutTypes => {
     expenseListenerMocks,
   };
 };
-
-class ExpenseListenerMock implements ExpenseListener {
-  params: any;
-  async update(params: ExpenseListener.Params): Promise<void> {
-    this.params = params;
-  }
-}
 
 describe("DbAddBill", () => {
   it("should calls AddBillRepository with correct values", async () => {
