@@ -52,7 +52,9 @@ describe("TypeOrmBillsRepository", () => {
       expect(result.account).toEqual(createdAccount);
       expect(result.description).toEqual(bill.description);
       expect(result.value).toEqual(bill.value);
-      expect(result.expirationDate).toEqual(bill.expirationDate);
+      expect(result.firstPaymentDate).toEqual(bill.firstPaymentDate);
+      expect(result.active).toEqual(bill.active);
+      expect(result.amount).toEqual(bill.amount);
       expect(result.dueDate).toEqual(bill.dueDate);
       expect(result).not.toHaveProperty("created_at");
       expect(result).not.toHaveProperty("updated_at");

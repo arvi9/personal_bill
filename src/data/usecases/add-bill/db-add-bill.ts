@@ -1,13 +1,41 @@
 import { AddBill } from "@/domain/usecases";
-import { AddBillRepository } from "@/data/protocols";
+import {
+  AddBillRepository,
+  ExpenseListener,
+  ExpensePublisher,
+} from "@/data/protocols";
 
-export class DbAddBill implements AddBill {
-  constructor(private readonly addBillRepository: AddBillRepository) {}
+export class DbAddBill extends ExpensePublisher implements AddBill {
+  private bill: AddBill.Model;
+
+  constructor(
+    private readonly addBillRepository: AddBillRepository,
+    protected readonly expensesListeners: ExpenseListener[]
+  ) {
+    super(expensesListeners);
+  }
 
   async add(params: AddBill.Params): Promise<AddBill.Model> {
-    const bill = await this.addBillRepository.add(params);
-    if (!bill) return null;
+    this.bill = await this.addBillRepository.add(params);
 
-    return bill;
+    if (!this.bill) {
+      return null;
+    }
+
+    await this.notifyListeners();
+    return this.bill;
+  }
+
+  async notifyListeners(): Promise<void> {
+    for (const listener of this.expensesListeners) {
+      await listener.update({
+        account: {
+          id: this.bill.account.id,
+        },
+        amount: this.bill.amount,
+        date: this.bill.firstPaymentDate,
+        value: this.bill.value,
+      });
+    }
   }
 }

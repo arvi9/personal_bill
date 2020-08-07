@@ -6,5 +6,7 @@ export type Bill = {
   value: number;
   description: string;
   dueDate: number;
-  expirationDate: Date;
+  firstPaymentDate: Date;
+  amount: number;
+  active: boolean;
 };

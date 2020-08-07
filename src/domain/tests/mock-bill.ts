@@ -7,7 +7,9 @@ export const mockBill = (): AddBill.Params => {
 
   return {
     dueDate: faker.random.number(31),
-    expirationDate: faker.date.future(),
+    amount: faker.random.number(10),
+    active: faker.random.boolean(),
+    firstPaymentDate: faker.date.recent(),
     description: faker.random.words(),
     value: faker.random.number(),
     account: {

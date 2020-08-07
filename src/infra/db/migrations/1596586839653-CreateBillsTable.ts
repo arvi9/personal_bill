@@ -33,8 +33,16 @@ export class CreateBillsTable1596586839653 implements MigrationInterface {
             type: "integer",
           },
           {
-            name: "expiration_date",
+            name: "first_payment_date",
             type: "date",
+          },
+          {
+            name: "amount",
+            type: "integer",
+          },
+          {
+            name: "active",
+            type: "boolean",
           },
           {
             name: "created_at",

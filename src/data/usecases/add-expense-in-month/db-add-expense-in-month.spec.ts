@@ -1,6 +1,6 @@
 import faker from "faker";
 import { DbAddExpenseInMonth } from "./db-add-expense-in-month";
-import { mockAccount, mockMonthlyExpense } from "@/domain/tests";
+import { mockAccount } from "@/domain/tests";
 import { MonthlyExpensesRepositorySpy } from "@/data/tests";
 
 type SutTypes = {

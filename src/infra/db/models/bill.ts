@@ -28,8 +28,14 @@ export class BillModel implements Bill {
   @Column({ name: "due_date" })
   dueDate: number;
 
-  @Column({ name: "expiration_date" })
-  expirationDate: Date;
+  @Column({ name: "first_payment_date" })
+  firstPaymentDate: Date;
+
+  @Column({ name: "amount" })
+  amount: number;
+
+  @Column({ name: "active" })
+  active: boolean;
 
   @CreateDateColumn()
   created_at: Date;
