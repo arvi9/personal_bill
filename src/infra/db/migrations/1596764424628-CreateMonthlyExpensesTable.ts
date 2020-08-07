@@ -33,10 +33,6 @@ export class CreateMonthlyExpensesTable1596764424628
             type: "integer",
           },
           {
-            name: "first_payment_date",
-            type: "date",
-          },
-          {
             name: "created_at",
             type: "timestamp",
             default: "now()",
