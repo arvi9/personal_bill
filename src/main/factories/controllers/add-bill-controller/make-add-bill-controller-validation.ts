@@ -8,7 +8,8 @@ export const makeAddBillControllerValidation = (): Validation => {
   return new ValidationComposite([
     new RequiredFieldValidation("value"),
     new RequiredFieldValidation("dueDate"),
-    new RequiredFieldValidation("expirationDate"),
+    new RequiredFieldValidation("active"),
+    new RequiredFieldValidation("amount"),
     new RequiredFieldValidation("description"),
     new RequiredFieldValidation("account"),
   ]);

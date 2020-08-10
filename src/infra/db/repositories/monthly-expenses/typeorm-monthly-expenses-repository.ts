@@ -1,5 +1,5 @@
 import { Repository, getRepository, Between } from "typeorm";
-import { getMonth, getYear, addMonths } from "date-fns";
+import { getMonth, getYear, parseISO, format } from "date-fns";
 import { MonthlyExpensesRepository } from "@/data/protocols";
 import { MonthlyExpensesModel } from "@/infra/db/models";
 
@@ -16,8 +16,9 @@ export class TypeOrmMonthlyExpensesRepository
     date,
     value,
   }: MonthlyExpensesRepository.Params): Promise<void> {
-    const year = getYear(date);
-    const month = getMonth(date) + 1;
+    const ISODate = new Date(date);
+    const year = getYear(ISODate);
+    const month = getMonth(ISODate) + 1;
     const monthlyExpense = this.repository.create({
       account,
       year,
@@ -52,8 +53,9 @@ export class TypeOrmMonthlyExpensesRepository
   }: MonthlyExpensesRepository.LoadByDateParams): Promise<
     MonthlyExpensesRepository.Model[]
   > {
-    const year = getYear(date);
-    const month = getMonth(date) + 1;
+    const ISODate = new Date(date);
+    const year = getYear(ISODate);
+    const month = getMonth(ISODate) + 1;
 
     const whereOptions = finalDate
       ? {

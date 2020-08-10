@@ -16,7 +16,7 @@ export class DbUpdateMonthlyExpenses implements UpdateMonthlyExpenses {
 
     if (params.amount > 1) {
       Object.assign(loadByDateParams, {
-        finalDate: addMonths(params.date, params.amount - 1),
+        finalDate: addMonths(new Date(params.date), params.amount - 1),
       });
     }
 
@@ -42,14 +42,14 @@ export class DbUpdateMonthlyExpenses implements UpdateMonthlyExpenses {
     for (let i = 0; i < params.amount; i++) {
       await this.monthlyExpensesRepository.add({
         account: params.account,
-        date: addMonths(params.date, i),
+        date: addMonths(new Date(params.date), i),
         value: params.value,
       });
     }
   }
 
   private async addRestMonthlyExpenses(
-    monthlyExpenses: MonthlyExpense[],
+    monthlyExpenses: Omit<MonthlyExpense, "id">[],
     params: UpdateMonthlyExpenses.Params
   ): Promise<void> {
     const { month, year } = monthlyExpenses.pop();
@@ -63,7 +63,7 @@ export class DbUpdateMonthlyExpenses implements UpdateMonthlyExpenses {
   }
 
   private async updateMonthlyExpenses(
-    monthlyExpenses: MonthlyExpense[],
+    monthlyExpenses: Omit<MonthlyExpense, "id">[],
     params: UpdateMonthlyExpenses.Params
   ) {
     for (const monthlyExpense of monthlyExpenses) {
@@ -72,7 +72,7 @@ export class DbUpdateMonthlyExpenses implements UpdateMonthlyExpenses {
   }
 
   private async updateMonthlyExpense(
-    monthlyExpense: MonthlyExpense,
+    monthlyExpense: Omit<MonthlyExpense, "id">,
     params: UpdateMonthlyExpenses.Params
   ): Promise<void> {
     await this.monthlyExpensesRepository.update({

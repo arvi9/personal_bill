@@ -18,7 +18,7 @@ export namespace MonthlyExpensesRepository {
     MonthlyExpensesRepository.Params,
     "value"
   > & { finalDate?: Date };
-  export type UpdateParams = Omit<MonthlyExpense, "account"> & {
+  export type UpdateParams = Omit<MonthlyExpense, "account" | "id"> & {
     account: {
       id: string;
     };

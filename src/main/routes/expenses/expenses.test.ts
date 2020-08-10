@@ -40,7 +40,7 @@ describe("Expenses Routes", () => {
       await request(app)
         .post("/expenses")
         .set("x-access-token", account.accessToken)
-        .send(addExpense)
+        .send({ ...addExpense, date: "2020-08-10" })
         .expect(201);
     });
   });

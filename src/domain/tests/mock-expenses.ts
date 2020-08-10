@@ -2,7 +2,7 @@ import faker from "faker";
 import { mockAccount } from "./mock-account";
 import { AddExpense } from "../usecases";
 
-export const mockAddExpense = (): AddExpense.Params => {
+export const mockAddExpense = () => {
   const { id } = mockAccount();
 
   return {
