@@ -5,8 +5,6 @@ import { TypeOrmMonthlyExpensesRepository } from "./typeorm-monthly-expenses-rep
 import { insertOneAccount } from "@/infra/db/seeds";
 import { AccountModel, MonthlyExpensesModel } from "@/infra/db/models";
 import { mockAccount, mockMonthlyExpense } from "@/domain/tests";
-import { MonthlyExpense } from "@/domain/models";
-import { UpdateMonthlyExpenses } from "@/domain/usecases";
 import { MonthlyExpensesRepository } from "@/data/protocols";
 import { getMonth, getYear } from "date-fns";
 
@@ -115,6 +113,31 @@ describe("TypeOrmMonthlyExpensesRepository", () => {
       expect(expenses[0].month).toBe(getMonth(expense.date) + 1);
       expect(expenses[0].year).toBe(getYear(expense.date));
       expect(expenses[0].value).toBe(`${expense.value}.00`);
+    });
+  });
+  describe("update", () => {
+    it("should update an existing monthly expense", async () => {
+      const sut = makeSut();
+      const account = mockAccount();
+      await insertOneAccount(getRepository(AccountModel), account);
+
+      const monthlyExpenseRepository = getRepository(MonthlyExpensesModel);
+      const monthlyOne = mockMonthlyExpense();
+      monthlyOne.account = account;
+      monthlyOne.month = 8;
+      monthlyOne.year = 2020;
+      monthlyOne.value = 300;
+      const createdExpense = await monthlyExpenseRepository.save(
+        monthlyExpenseRepository.create(monthlyOne)
+      );
+
+      createdExpense.value = 500;
+      await sut.update(createdExpense);
+      const expenses = await monthlyExpenseRepository.find();
+      expect(expenses).toHaveLength(1);
+      expect(expenses[0].month).toBe(createdExpense.month);
+      expect(expenses[0].year).toBe(createdExpense.year);
+      expect(expenses[0].value).toBe(`500.00`);
     });
   });
 });
