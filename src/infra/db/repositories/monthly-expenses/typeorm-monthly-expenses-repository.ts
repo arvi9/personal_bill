@@ -25,26 +25,24 @@ export class TypeOrmMonthlyExpensesRepository
     const year = getYear(date);
     const month = getMonth(date) + 1;
 
-    let expenses: MonthlyExpensesModel[] = [];
-
-    if (finalDate) {
-      expenses = await this.repository.find({
-        month: Between(month, getMonth(finalDate) + 1),
-        year,
-        account,
-        order: {
-          month: "ASC",
-        },
-      });
-    } else {
-      expenses = await this.repository.find({
-        where: {
-          month,
+    const whereOptions = finalDate
+      ? {
+          month: Between(month, getMonth(finalDate) + 1),
           year,
           account,
-        },
-      });
-    }
+          order: {
+            month: "ASC",
+          },
+        }
+      : {
+          where: {
+            month,
+            year,
+            account,
+          },
+        };
+
+    const expenses = await this.repository.find(whereOptions);
 
     return expenses.map((expense) => ({
       ...expense,
