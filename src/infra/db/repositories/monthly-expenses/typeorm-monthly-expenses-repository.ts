@@ -27,7 +27,23 @@ export class TypeOrmMonthlyExpensesRepository
     await this.repository.save(monthlyExpense);
   }
 
-  async update(params: MonthlyExpensesRepository.UpdateParams): Promise<void> {}
+  async update({
+    year,
+    month,
+    account,
+    value,
+  }: MonthlyExpensesRepository.UpdateParams): Promise<void> {
+    const expense = await this.repository.findOne({
+      where: {
+        year,
+        month,
+        account,
+      },
+    });
+
+    expense.value = value;
+    await this.repository.save(expense);
+  }
 
   async loadByDate({
     account,
