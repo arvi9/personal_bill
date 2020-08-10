@@ -5,7 +5,7 @@ import app from "@/main/config/app";
 import connection from "@/infra/db/config/database";
 import { mockAddExpense, mockAccount } from "@/domain/tests";
 import { insertOneAccount } from "@/infra/db/seeds";
-import { AccountModel } from "@/infra/db/models";
+import { AccountModel, MonthlyExpensesModel } from "@/infra/db/models";
 
 describe("Expenses Routes", () => {
   beforeAll(async () => {
@@ -42,6 +42,9 @@ describe("Expenses Routes", () => {
         .set("x-access-token", account.accessToken)
         .send({ ...addExpense, date: "2020-08-10" })
         .expect(201);
+      const monthlyExpenses = await getRepository(MonthlyExpensesModel).find();
+      expect(monthlyExpenses).toHaveLength(1);
+      expect(monthlyExpenses[0].value).toBe(`${addExpense.value}.00`);
     });
   });
 });
