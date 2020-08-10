@@ -10,7 +10,7 @@ import { AccountModel, MonthlyExpensesModel } from "@/infra/db/models";
 describe("Bills Routes", () => {
   beforeAll(async () => {
     await connection.create();
-    await getConnection().runMigrations();
+    await getConnection().runMigrations({ transaction: "all" });
   });
   beforeEach(async () => {
     await connection.clear();
@@ -47,6 +47,26 @@ describe("Bills Routes", () => {
       const monthlyExpenses = await getRepository(MonthlyExpensesModel).find();
       expect(monthlyExpenses).toHaveLength(1);
       expect(monthlyExpenses[0].value).toBe(`${addBill.value}.00`);
+    });
+    it("should returns 201 on success and add the correct monthly expenses number", async () => {
+      const account = mockAccount();
+      const accessToken = jwt.sign(
+        { id: account.id, email: account.email },
+        process.env.JWT_SECRET_KEY
+      );
+      account.accessToken = accessToken;
+      const addBill = mockBill();
+      addBill.amount = 3;
+      addBill.account = account;
+      await insertOneAccount(getRepository(AccountModel), account);
+      await request(app)
+        .post("/bills")
+        .set("x-access-token", accessToken)
+        .send(addBill)
+        .expect(201);
+
+      const monthlyExpenses = await getRepository(MonthlyExpensesModel).find();
+      expect(monthlyExpenses).toHaveLength(3);
     });
   });
 });
