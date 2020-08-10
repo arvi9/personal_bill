@@ -5,7 +5,7 @@ import app from "@/main/config/app";
 import connection from "@/infra/db/config/database";
 import { mockAccount, mockBill } from "@/domain/tests";
 import { insertOneAccount } from "@/infra/db/seeds";
-import { AccountModel } from "@/infra/db/models";
+import { AccountModel, MonthlyExpensesModel } from "@/infra/db/models";
 
 describe("Bills Routes", () => {
   beforeAll(async () => {
@@ -35,6 +35,7 @@ describe("Bills Routes", () => {
       );
       account.accessToken = accessToken;
       const addBill = mockBill();
+      addBill.amount = 1;
       addBill.account = account;
       await insertOneAccount(getRepository(AccountModel), account);
       await request(app)
@@ -42,6 +43,10 @@ describe("Bills Routes", () => {
         .set("x-access-token", accessToken)
         .send(addBill)
         .expect(201);
+
+      const monthlyExpenses = await getRepository(MonthlyExpensesModel).find();
+      expect(monthlyExpenses).toHaveLength(1);
+      expect(monthlyExpenses[0].value).toBe(`${addBill.value}.00`);
     });
   });
 });
