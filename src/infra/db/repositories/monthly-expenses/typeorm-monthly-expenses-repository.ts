@@ -11,7 +11,21 @@ export class TypeOrmMonthlyExpensesRepository
     this.repository = getRepository(MonthlyExpensesModel);
   }
 
-  async add(params: MonthlyExpensesRepository.Params): Promise<void> {}
+  async add({
+    account,
+    date,
+    value,
+  }: MonthlyExpensesRepository.Params): Promise<void> {
+    const year = getYear(date);
+    const month = getMonth(date) + 1;
+    const monthlyExpense = this.repository.create({
+      account,
+      year,
+      month,
+      value,
+    });
+    await this.repository.save(monthlyExpense);
+  }
 
   async update(params: MonthlyExpensesRepository.UpdateParams): Promise<void> {}
 
