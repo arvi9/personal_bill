@@ -1,7 +1,12 @@
 import faker from "faker";
 import { SignUpController } from "./sign-up-controller";
 import { ValidationSpy, SignUpSpy } from "@/presentation/test";
-import { HttpRequest, badRequest, serverError } from "../protocols";
+import {
+  HttpRequest,
+  badRequest,
+  serverError,
+  created,
+} from "@/presentation/protocols";
 import { EmailAlreadyInUseError } from "@/domain/errors";
 
 type SutTypes = {
@@ -69,5 +74,10 @@ describe("SignUpController", () => {
       .mockRejectedValueOnce(new Error("Internal Server Error"));
     const response = await sut.handle(makeFakeRequest());
     expect(response).toEqual(serverError(new Error("Internal Server Error")));
+  });
+  it("should returns 201 with account on success", async () => {
+    const { sut, signUpSpy } = makeSut();
+    const response = await sut.handle(makeFakeRequest());
+    expect(response).toEqual(created(signUpSpy.account));
   });
 });
