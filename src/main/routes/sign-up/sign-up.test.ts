@@ -34,8 +34,21 @@ describe("SignUp Route", () => {
     await request(app).post("/signup").send(accountRequest).expect(400);
   });
   it("should returns 400 if email is invalid", async () => {
-    const accountRequest = mockAccount();
-    accountRequest.email = "any invalid email";
+    const fakeAccount = mockAccount();
+    const accountRequest = {
+      ...fakeAccount,
+      email: "any invalid email",
+      passwordConfirmation: fakeAccount.password,
+    };
+    await request(app).post("/signup").send(accountRequest).expect(400);
+  });
+  it("should returns 400 if password and password confirmation did not match", async () => {
+    const fakeAccount = mockAccount();
+    const accountRequest = {
+      ...fakeAccount,
+      password: "any_password",
+      passwordConfirmation: faker.random.word(),
+    };
     await request(app).post("/signup").send(accountRequest).expect(400);
   });
 });
