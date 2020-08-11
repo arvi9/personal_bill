@@ -1,28 +1,36 @@
 import faker from "faker";
 import { DbSignUp } from "./db-sign-up";
-import { AccountsRepositorySpy, HashSpy } from "@/data/tests";
+import {
+  AccountsRepositorySpy,
+  HashSpy,
+  GenerateAccessTokenSpy,
+} from "@/data/tests";
 
 type SutTypes = {
   sut: DbSignUp;
   loadAccountByEmailSpy: AccountsRepositorySpy;
   addAccountRepositorySpy: AccountsRepositorySpy;
   hasherSpy: HashSpy;
+  generateAccessTokenSpy: GenerateAccessTokenSpy;
 };
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailSpy = new AccountsRepositorySpy();
   const hasherSpy = new HashSpy();
   const addAccountRepositorySpy = new AccountsRepositorySpy();
+  const generateAccessTokenSpy = new GenerateAccessTokenSpy();
   const sut = new DbSignUp(
     loadAccountByEmailSpy,
     hasherSpy,
-    addAccountRepositorySpy
+    addAccountRepositorySpy,
+    generateAccessTokenSpy
   );
   return {
     sut,
     loadAccountByEmailSpy,
     hasherSpy,
     addAccountRepositorySpy,
+    generateAccessTokenSpy,
   };
 };
 
@@ -80,5 +88,13 @@ describe("DbSignUp", () => {
       .mockRejectedValueOnce(new Error());
     const result = sut.signup(makeFakeParams());
     expect(result).rejects.toEqual(new Error());
+  });
+  it("should calls GenerateAccessToken with correct params", async () => {
+    const { sut, addAccountRepositorySpy, generateAccessTokenSpy } = makeSut();
+    await sut.signup(makeFakeParams());
+    expect(generateAccessTokenSpy.params).toEqual({
+      id: addAccountRepositorySpy.account.id,
+      email: addAccountRepositorySpy.account.email,
+    });
   });
 });
