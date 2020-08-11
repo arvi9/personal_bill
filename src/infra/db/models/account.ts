@@ -29,7 +29,7 @@ export class AccountModel implements Account {
   @OneToMany(() => BillModel, (bill) => bill.account)
   bills: BillModel[];
 
-  @Column({ name: "access_token" })
+  @Column({ name: "access_token", nullable: true })
   accessToken: string;
 
   @CreateDateColumn()

@@ -31,7 +31,7 @@ export class CreateAccountsTable1596047844300 implements MigrationInterface {
           {
             name: "access_token",
             type: "text",
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: "created_at",

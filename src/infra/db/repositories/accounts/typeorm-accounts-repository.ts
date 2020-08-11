@@ -3,6 +3,7 @@ import {
   LoadAccountByEmailRepository,
   UpdateAccessTokenRepository,
   LoadAccountByTokenRepository,
+  AddAccountRepository,
 } from "@/data/protocols";
 import { AccountModel } from "@/infra/db/models/account";
 import { LoadAccountByToken } from "@/domain/usecases";
@@ -12,11 +13,24 @@ export class TypeOrmAccountsRepository
   implements
     LoadAccountByEmailRepository,
     UpdateAccessTokenRepository,
-    LoadAccountByTokenRepository {
+    LoadAccountByTokenRepository,
+    AddAccountRepository {
   private repository: Repository<AccountModel>;
 
   constructor() {
     this.repository = getRepository(AccountModel);
+  }
+
+  async add(
+    params: AddAccountRepository.Params
+  ): Promise<AddAccountRepository.Model> {
+    const account = this.repository.create({
+      name: params.name,
+      email: params.email,
+      password: params.password,
+    });
+
+    return this.repository.save(account);
   }
 
   async loadByEmail(
