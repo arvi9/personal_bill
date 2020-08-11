@@ -45,6 +45,15 @@ describe("BcryptAdapter", () => {
       const result = await sut.compare(params);
       expect(result).toBe(true);
     });
+    it("should throws if bcrypt.compare throws", () => {
+      const sut = makeSut();
+      mockedBcrypt.compare.mockRejectedValueOnce(new Error());
+      const result = sut.compare({
+        value: faker.random.word(),
+        valueToCompare: faker.random.word(),
+      });
+      expect(result).rejects.toThrow(new Error());
+    });
   });
   describe("hash", () => {
     it("should calls bcrypt.hash with correct values", async () => {
