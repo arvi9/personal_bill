@@ -5,6 +5,7 @@ import {
   Validation,
   badRequest,
   serverError,
+  created,
 } from "@/presentation/protocols";
 import { SignUp } from "@/domain/usecases";
 import { EmailAlreadyInUseError } from "@/domain/errors";
@@ -34,7 +35,7 @@ export class SignUpController implements Controller {
         return badRequest(error);
       }
 
-      return null;
+      return created(account);
     } catch (error) {
       return serverError(error);
     }
