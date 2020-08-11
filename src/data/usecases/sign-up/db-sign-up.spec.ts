@@ -43,6 +43,14 @@ describe("DbSignUp", () => {
     await sut.signup(params);
     expect(hasherSpy.text).toBe(params.password);
   });
+  it("should throws if LoadAccountByEmail throws", () => {
+    const { sut, loadAccountByEmailSpy } = makeSut();
+    jest
+      .spyOn(loadAccountByEmailSpy, "loadByEmail")
+      .mockRejectedValueOnce(new Error());
+    const result = sut.signup(makeFakeParams());
+    expect(result).rejects.toEqual(new Error());
+  });
   it("should throws if Hasher throws", () => {
     const { sut, hasherSpy } = makeSut();
     jest.spyOn(hasherSpy, "hash").mockRejectedValueOnce(new Error());
