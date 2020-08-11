@@ -5,17 +5,24 @@ import { AccountsRepositorySpy, HashSpy } from "@/data/tests";
 type SutTypes = {
   sut: DbSignUp;
   loadAccountByEmailSpy: AccountsRepositorySpy;
+  addAccountRepositorySpy: AccountsRepositorySpy;
   hasherSpy: HashSpy;
 };
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailSpy = new AccountsRepositorySpy();
   const hasherSpy = new HashSpy();
-  const sut = new DbSignUp(loadAccountByEmailSpy, hasherSpy);
+  const addAccountRepositorySpy = new AccountsRepositorySpy();
+  const sut = new DbSignUp(
+    loadAccountByEmailSpy,
+    hasherSpy,
+    addAccountRepositorySpy
+  );
   return {
     sut,
     loadAccountByEmailSpy,
     hasherSpy,
+    addAccountRepositorySpy,
   };
 };
 
@@ -56,5 +63,14 @@ describe("DbSignUp", () => {
     jest.spyOn(hasherSpy, "hash").mockRejectedValueOnce(new Error());
     const result = sut.signup(makeFakeParams());
     expect(result).rejects.toEqual(new Error());
+  });
+  it("should calls AddAccountRepository with correct params", async () => {
+    const { sut, hasherSpy, addAccountRepositorySpy } = makeSut();
+    const params = makeFakeParams();
+    await sut.signup(params);
+    expect(addAccountRepositorySpy.addParams).toEqual({
+      ...params,
+      password: hasherSpy.hashedValue,
+    });
   });
 });
