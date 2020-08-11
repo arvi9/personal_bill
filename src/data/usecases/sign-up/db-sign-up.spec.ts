@@ -4,6 +4,7 @@ import {
   AccountsRepositorySpy,
   HashSpy,
   GenerateAccessTokenSpy,
+  UpdateAccessTokenRepositoryMock,
 } from "@/data/tests";
 
 type SutTypes = {
@@ -12,6 +13,7 @@ type SutTypes = {
   addAccountRepositorySpy: AccountsRepositorySpy;
   hasherSpy: HashSpy;
   generateAccessTokenSpy: GenerateAccessTokenSpy;
+  updateAccessTokenMock: UpdateAccessTokenRepositoryMock;
 };
 
 const makeSut = (): SutTypes => {
@@ -19,11 +21,13 @@ const makeSut = (): SutTypes => {
   const hasherSpy = new HashSpy();
   const addAccountRepositorySpy = new AccountsRepositorySpy();
   const generateAccessTokenSpy = new GenerateAccessTokenSpy();
+  const updateAccessTokenMock = new UpdateAccessTokenRepositoryMock();
   const sut = new DbSignUp(
     loadAccountByEmailSpy,
     hasherSpy,
     addAccountRepositorySpy,
-    generateAccessTokenSpy
+    generateAccessTokenSpy,
+    updateAccessTokenMock
   );
   return {
     sut,
@@ -31,6 +35,7 @@ const makeSut = (): SutTypes => {
     hasherSpy,
     addAccountRepositorySpy,
     generateAccessTokenSpy,
+    updateAccessTokenMock,
   };
 };
 
@@ -106,5 +111,18 @@ describe("DbSignUp", () => {
       });
     const result = sut.signup(makeFakeParams());
     expect(result).rejects.toEqual(new Error());
+  });
+  it("should calls UpdateAccessToken with correct params", async () => {
+    const {
+      sut,
+      addAccountRepositorySpy,
+      generateAccessTokenSpy,
+      updateAccessTokenMock,
+    } = makeSut();
+    await sut.signup(makeFakeParams());
+    expect(updateAccessTokenMock.params).toEqual({
+      accountId: addAccountRepositorySpy.account.id,
+      accessToken: generateAccessTokenSpy.accessToken,
+    });
   });
 });
