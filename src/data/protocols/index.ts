@@ -8,3 +8,4 @@ export * from "./utils/hash-comparer";
 export * from "./utils/generate-access-token";
 export * from "./utils/decrypter";
 export * from "./utils/expense-publisher";
+export * from "./utils/hasher";
