@@ -53,5 +53,11 @@ describe("BcryptAdapter", () => {
       await sut.hash(param);
       expect(mockedBcrypt.hash).toHaveBeenCalledWith(param, 12);
     });
+    it("should returns the hashed value on bcrypt.hash success", async () => {
+      const sut = makeSut();
+      mockedBcrypt.hash.mockResolvedValueOnce("hashed value");
+      const result = await sut.hash("any string value");
+      expect(result).toBe("hashed value");
+    });
   });
 });
