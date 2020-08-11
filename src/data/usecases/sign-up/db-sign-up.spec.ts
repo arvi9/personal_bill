@@ -30,4 +30,9 @@ describe("DbSignUp", () => {
     await sut.signup(params);
     expect(loadAccountByEmailSpy.email).toBe(params.email);
   });
+  it("should return null if LoadAccountByEmail returns an account", async () => {
+    const { sut } = makeSut();
+    const result = await sut.signup(makeFakeParams());
+    expect(result).toBeNull();
+  });
 });
