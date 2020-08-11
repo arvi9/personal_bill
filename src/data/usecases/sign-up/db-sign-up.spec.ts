@@ -23,7 +23,6 @@ const makeFakeParams = () => ({
   name: faker.name.findName(),
   email: faker.internet.email(),
   password: faker.internet.password(),
-  passwordConfirmation: this.password,
 });
 
 describe("DbSignUp", () => {
