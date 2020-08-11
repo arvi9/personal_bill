@@ -11,4 +11,12 @@ describe("EmailValidation", () => {
     const result = sut.validate(input);
     expect(result).toEqual(new EmailValidationError(input.email));
   });
+  it("should returns null if validation succeds", () => {
+    const sut = new EmailValidation("email");
+    const input = {
+      email: faker.internet.email(),
+    };
+    const result = sut.validate(input);
+    expect(result).toBeNull();
+  });
 });
