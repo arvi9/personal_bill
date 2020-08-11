@@ -1,4 +1,4 @@
-export * from "./make-hash-comparer";
+export * from "./make-hash";
 export * from "./make-generate-access-token";
 export * from "./db/make-load-account-by-email-repository";
 export * from "./db/make-add-expense-repository";

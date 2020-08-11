@@ -2,7 +2,7 @@ import { DbAuthenticate } from "@/data/usecases";
 import { Authenticate } from "@/domain/usecases";
 import {
   makeGenerateAccessToken,
-  makeHashComparer,
+  makeHash,
   makeLoadAccountByEmailRepository,
   makeUpdateAccessTokenRepository,
 } from "@/main/factories/infra";
@@ -10,7 +10,7 @@ import {
 export const makeAuthenticate = (): Authenticate => {
   return new DbAuthenticate(
     makeLoadAccountByEmailRepository(),
-    makeHashComparer(),
+    makeHash(),
     makeGenerateAccessToken(),
     makeUpdateAccessTokenRepository()
   );
