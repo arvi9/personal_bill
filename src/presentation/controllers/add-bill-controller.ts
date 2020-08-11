@@ -20,6 +20,7 @@ export class AddBillController implements Controller {
     try {
       const validationError = this.validation.validate(httpRequest.body);
       if (validationError) {
+        console.log(validationError);
         return badRequest(validationError);
       }
 

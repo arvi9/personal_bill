@@ -53,7 +53,7 @@ export class DbUpdateMonthlyExpenses implements UpdateMonthlyExpenses {
     params: UpdateMonthlyExpenses.Params
   ): Promise<void> {
     const { month, year } = monthlyExpenses.pop();
-    for (let i = 0; i < params.amount - monthlyExpenses.length; i++) {
+    for (let i = 0; i < params.amount - monthlyExpenses.length - 1; i++) {
       await this.monthlyExpensesRepository.add({
         account: params.account,
         value: params.value,
