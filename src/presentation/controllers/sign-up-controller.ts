@@ -4,6 +4,7 @@ import {
   HttpResponse,
   Validation,
   badRequest,
+  serverError,
 } from "@/presentation/protocols";
 import { SignUp } from "@/domain/usecases";
 import { EmailAlreadyInUseError } from "@/domain/errors";
@@ -15,23 +16,27 @@ export class SignUpController implements Controller {
   ) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const validationError = this.validation.validate(httpRequest.body);
-    if (validationError) {
-      return badRequest(validationError);
+    try {
+      const validationError = this.validation.validate(httpRequest.body);
+      if (validationError) {
+        return badRequest(validationError);
+      }
+
+      const { email, name, password } = httpRequest.body;
+      const account = await this.signUp.signup({
+        email,
+        name,
+        password,
+      });
+
+      if (!account) {
+        const error = new EmailAlreadyInUseError();
+        return badRequest(error);
+      }
+
+      return null;
+    } catch (error) {
+      return serverError(error);
     }
-
-    const { email, name, password } = httpRequest.body;
-    const account = await this.signUp.signup({
-      email,
-      name,
-      password,
-    });
-
-    if (!account) {
-      const error = new EmailAlreadyInUseError();
-      return badRequest(error);
-    }
-
-    return null;
   }
 }
