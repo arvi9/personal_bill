@@ -12,4 +12,14 @@ describe("CompareFieldsValidation", () => {
     const result = sut.validate(input);
     expect(result).toEqual(new InvalidComparationError());
   });
+  it("should returns null on validation succeds", () => {
+    const sut = new CompareFieldsValidation("field", "comparationField");
+    const value = faker.random.word();
+    const input = {
+      field: value,
+      comparationField: value,
+    };
+    const result = sut.validate(input);
+    expect(result).toBeNull();
+  });
 });
