@@ -97,4 +97,14 @@ describe("DbSignUp", () => {
       email: addAccountRepositorySpy.account.email,
     });
   });
+  it("should throws if GenerateAccessToken throws", () => {
+    const { sut, generateAccessTokenSpy } = makeSut();
+    jest
+      .spyOn(generateAccessTokenSpy, "generate")
+      .mockImplementationOnce(() => {
+        throw new Error();
+      });
+    const result = sut.signup(makeFakeParams());
+    expect(result).rejects.toEqual(new Error());
+  });
 });
