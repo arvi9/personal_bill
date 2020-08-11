@@ -1,20 +1,22 @@
 import faker from "faker";
 import { SignUpController } from "./sign-up-controller";
-import { ValidationSpy } from "@/presentation/test";
+import { ValidationSpy, SignUpSpy } from "@/presentation/test";
 import { HttpRequest, badRequest } from "../protocols";
-import { exception } from "console";
 
 type SutTypes = {
   sut: SignUpController;
   validationSpy: ValidationSpy;
+  signUpSpy: SignUpSpy;
 };
 
 const makeSut = (): SutTypes => {
+  const signUpSpy = new SignUpSpy();
   const validationSpy = new ValidationSpy();
-  const sut = new SignUpController(validationSpy);
+  const sut = new SignUpController(validationSpy, signUpSpy);
   return {
     sut,
     validationSpy,
+    signUpSpy,
   };
 };
 
@@ -42,5 +44,15 @@ describe("SignUpController", () => {
     validationSpy.validationError = new Error("Validation Error");
     const response = await sut.handle(makeFakeRequest());
     expect(response).toEqual(badRequest(new Error("Validation Error")));
+  });
+  it("should calls SignUp with correct values", async () => {
+    const { sut, signUpSpy } = makeSut();
+    const params = makeFakeRequest();
+    await sut.handle(params);
+    expect(signUpSpy.params).toEqual({
+      email: params.body.email,
+      name: params.body.name,
+      password: params.body.password,
+    });
   });
 });
