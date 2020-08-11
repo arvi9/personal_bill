@@ -95,4 +95,19 @@ describe("TypeOrmAccountsRepository", () => {
       expect(response).toBeNull();
     });
   });
+  describe("add", () => {
+    it("should add a new account in the database", async () => {
+      const { sut, helperRepository } = makeSut();
+      const params = {
+        name: faker.name.findName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      };
+      const result = await sut.add(params);
+      expect(await helperRepository.find()).toHaveLength(1);
+      expect(result.email).toBe(params.email);
+      expect(result.name).toBe(params.name);
+      expect(result.password).toBe(params.password);
+    });
+  });
 });
