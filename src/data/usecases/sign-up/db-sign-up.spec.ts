@@ -73,4 +73,12 @@ describe("DbSignUp", () => {
       password: hasherSpy.hashedValue,
     });
   });
+  it("should throws if AddAccountRepository throws", () => {
+    const { sut, addAccountRepositorySpy } = makeSut();
+    jest
+      .spyOn(addAccountRepositorySpy, "add")
+      .mockRejectedValueOnce(new Error());
+    const result = sut.signup(makeFakeParams());
+    expect(result).rejects.toEqual(new Error());
+  });
 });
