@@ -6,6 +6,7 @@ import {
   GenerateAccessTokenSpy,
   UpdateAccessTokenRepositoryMock,
 } from "@/data/tests";
+import { mockAccount } from "@/domain/tests";
 
 type SutTypes = {
   sut: DbSignUp;
@@ -22,6 +23,7 @@ const makeSut = (): SutTypes => {
   const addAccountRepositorySpy = new AccountsRepositorySpy();
   const generateAccessTokenSpy = new GenerateAccessTokenSpy();
   const updateAccessTokenMock = new UpdateAccessTokenRepositoryMock();
+  loadAccountByEmailSpy.account = null;
   const sut = new DbSignUp(
     loadAccountByEmailSpy,
     hasherSpy,
@@ -53,7 +55,8 @@ describe("DbSignUp", () => {
     expect(loadAccountByEmailSpy.email).toBe(params.email);
   });
   it("should return null if LoadAccountByEmail returns an account", async () => {
-    const { sut } = makeSut();
+    const { sut, loadAccountByEmailSpy } = makeSut();
+    loadAccountByEmailSpy.account = mockAccount();
     const result = await sut.signup(makeFakeParams());
     expect(result).toBeNull();
   });
@@ -122,6 +125,16 @@ describe("DbSignUp", () => {
     await sut.signup(makeFakeParams());
     expect(updateAccessTokenMock.params).toEqual({
       accountId: addAccountRepositorySpy.account.id,
+      accessToken: generateAccessTokenSpy.accessToken,
+    });
+  });
+  it("should returns the created account on success", async () => {
+    const { sut, addAccountRepositorySpy, generateAccessTokenSpy } = makeSut();
+    const account = await sut.signup(makeFakeParams());
+    expect(account).toEqual({
+      id: addAccountRepositorySpy.account.id,
+      name: addAccountRepositorySpy.account.name,
+      email: addAccountRepositorySpy.account.email,
       accessToken: generateAccessTokenSpy.accessToken,
     });
   });
