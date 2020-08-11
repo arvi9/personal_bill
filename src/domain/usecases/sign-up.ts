@@ -10,5 +10,5 @@ export namespace SignUp {
     email: string;
     password: string;
   };
-  export type Model = Account;
+  export type Model = Omit<Account, "password">;
 }

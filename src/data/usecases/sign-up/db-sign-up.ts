@@ -17,25 +17,32 @@ export class DbSignUp implements SignUp {
   ) {}
 
   async signup(params: SignUp.Params): Promise<SignUp.Model> {
-    await this.loadAccountByEmailRepository.loadByEmail(params.email);
+    const existingAccount = await this.loadAccountByEmailRepository.loadByEmail(
+      params.email
+    );
+    if (existingAccount) return null;
+
     const hashedPassword = await this.hasher.hash(params.password);
 
-    const account = await this.addAccountRepository.add({
+    const createdAccount = await this.addAccountRepository.add({
       email: params.email,
       name: params.name,
       password: hashedPassword,
     });
 
     const accessToken = this.generateAccessToken.generate({
-      id: account.id,
-      email: account.email,
+      id: createdAccount.id,
+      email: createdAccount.email,
     });
 
     await this.updateAccessTokenRepository.updateAccessToken({
       accessToken,
-      accountId: account.id,
+      accountId: createdAccount.id,
     });
 
-    return null;
+    const { password, ...account } = createdAccount;
+    account.accessToken = accessToken;
+
+    return account;
   }
 }
