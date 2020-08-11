@@ -37,10 +37,16 @@ describe("DbSignUp", () => {
     const result = await sut.signup(makeFakeParams());
     expect(result).toBeNull();
   });
-  it("should Hasher with correct password", async () => {
+  it("should calls Hasher with correct password", async () => {
     const { sut, hasherSpy } = makeSut();
     const params = makeFakeParams();
     await sut.signup(params);
     expect(hasherSpy.text).toBe(params.password);
+  });
+  it("should throws if Hasher throws", () => {
+    const { sut, hasherSpy } = makeSut();
+    jest.spyOn(hasherSpy, "hash").mockRejectedValueOnce(new Error());
+    const result = sut.signup(makeFakeParams());
+    expect(result).rejects.toEqual(new Error());
   });
 });
