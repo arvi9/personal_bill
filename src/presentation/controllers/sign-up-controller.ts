@@ -6,6 +6,7 @@ import {
   badRequest,
 } from "@/presentation/protocols";
 import { SignUp } from "@/domain/usecases";
+import { EmailAlreadyInUseError } from "@/domain/errors";
 
 export class SignUpController implements Controller {
   constructor(
@@ -20,11 +21,17 @@ export class SignUpController implements Controller {
     }
 
     const { email, name, password } = httpRequest.body;
-    await this.signUp.signup({
+    const account = await this.signUp.signup({
       email,
       name,
       password,
     });
+
+    if (!account) {
+      const error = new EmailAlreadyInUseError();
+      return badRequest(error);
+    }
+
     return null;
   }
 }
