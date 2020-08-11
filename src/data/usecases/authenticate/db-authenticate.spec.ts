@@ -1,7 +1,7 @@
 import faker from "faker";
 import {
   AccountsRepositorySpy,
-  HashComparerSpy,
+  HashSpy,
   GenerateAccessTokenSpy,
 } from "@/data/tests";
 import { DbAuthenticate } from "./db-authenticate";
@@ -11,14 +11,14 @@ import { UpdateAccessTokenRepositoryMock } from "@/data/tests";
 type SutTypes = {
   sut: DbAuthenticate;
   accountsRepositorySpy: AccountsRepositorySpy;
-  hashComparerSpy: HashComparerSpy;
+  hashComparerSpy: HashSpy;
   generateAccessTokenSpy: GenerateAccessTokenSpy;
   updateAccessTokenRepositoryMock: UpdateAccessTokenRepositoryMock;
 };
 
 const makeSut = (): SutTypes => {
   const accountsRepositorySpy = new AccountsRepositorySpy();
-  const hashComparerSpy = new HashComparerSpy();
+  const hashComparerSpy = new HashSpy();
   const generateAccessTokenSpy = new GenerateAccessTokenSpy();
   const updateAccessTokenRepositoryMock = new UpdateAccessTokenRepositoryMock();
   const sut = new DbAuthenticate(

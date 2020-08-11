@@ -1,18 +1,21 @@
 import faker from "faker";
 import { DbSignUp } from "./db-sign-up";
-import { AccountsRepositorySpy } from "@/data/tests";
+import { AccountsRepositorySpy, HashSpy } from "@/data/tests";
 
 type SutTypes = {
   sut: DbSignUp;
   loadAccountByEmailSpy: AccountsRepositorySpy;
+  hasherSpy: HashSpy;
 };
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailSpy = new AccountsRepositorySpy();
-  const sut = new DbSignUp(loadAccountByEmailSpy);
+  const hasherSpy = new HashSpy();
+  const sut = new DbSignUp(loadAccountByEmailSpy, hasherSpy);
   return {
     sut,
     loadAccountByEmailSpy,
+    hasherSpy,
   };
 };
 
@@ -34,5 +37,11 @@ describe("DbSignUp", () => {
     const { sut } = makeSut();
     const result = await sut.signup(makeFakeParams());
     expect(result).toBeNull();
+  });
+  it("should Hasher with correct password", async () => {
+    const { sut, hasherSpy } = makeSut();
+    const params = makeFakeParams();
+    await sut.signup(params);
+    expect(hasherSpy.text).toBe(params.password);
   });
 });
