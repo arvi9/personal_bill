@@ -33,4 +33,9 @@ describe("SignUp Route", () => {
     };
     await request(app).post("/signup").send(accountRequest).expect(400);
   });
+  it("should returns 400 if email is invalid", async () => {
+    const accountRequest = mockAccount();
+    accountRequest.email = "any invalid email";
+    await request(app).post("/signup").send(accountRequest).expect(400);
+  });
 });
