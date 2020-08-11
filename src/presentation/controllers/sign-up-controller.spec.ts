@@ -2,6 +2,7 @@ import faker from "faker";
 import { SignUpController } from "./sign-up-controller";
 import { ValidationSpy, SignUpSpy } from "@/presentation/test";
 import { HttpRequest, badRequest } from "../protocols";
+import { EmailAlreadyInUseError } from "@/domain/errors";
 
 type SutTypes = {
   sut: SignUpController;
@@ -54,5 +55,11 @@ describe("SignUpController", () => {
       name: params.body.name,
       password: params.body.password,
     });
+  });
+  it("should returns 400 if SignUp returns null", async () => {
+    const { sut, signUpSpy } = makeSut();
+    signUpSpy.account = null;
+    const response = await sut.handle(makeFakeRequest());
+    expect(response).toEqual(badRequest(new EmailAlreadyInUseError()));
   });
 });
