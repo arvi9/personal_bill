@@ -51,4 +51,14 @@ describe("SignUp Route", () => {
     };
     await request(app).post("/signup").send(accountRequest).expect(400);
   });
+  it("should create an account and returns 201 on success", async () => {
+    const fakeAccount = mockAccount();
+    const accountRequest = {
+      ...fakeAccount,
+      passwordConfirmation: fakeAccount.password,
+    };
+    await request(app).post("/signup").send(accountRequest).expect(201);
+    const accounts = await getRepository(AccountModel).find();
+    expect(accounts).toHaveLength(1);
+  });
 });
